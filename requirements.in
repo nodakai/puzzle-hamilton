@@ -1,3 +1,0 @@
-# Runtime dependencies are currently limited to the Python standard library.
-# Test tooling lives here so `uv pip compile` produces a complete lockfile for local work.
-pytest

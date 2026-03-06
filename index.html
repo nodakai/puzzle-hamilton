@@ -1,0 +1,1194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hampuz</title>
+    <meta
+      name="description"
+      content="Generate printable Hamilton path and circuit puzzles directly in the browser."
+    >
+    <style>
+:root {
+  --app-bg: #ede6d8;
+  --panel-bg: #fbf6ec;
+  --panel-border: #d9c7aa;
+  --panel-shadow: rgba(61, 45, 24, 0.08);
+  --text: #22201b;
+  --muted: #6a6458;
+  --accent: #8d5b1f;
+  --accent-soft: #f2e2bf;
+  --page-edge: #d8d8d8;
+  --field-bg: #fffdf8;
+  --field-border: #cdbda0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(255, 242, 215, 0.9), transparent 28%),
+    linear-gradient(180deg, #f4efe5 0%, var(--app-bg) 100%);
+  font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 21rem minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.control-panel {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow: auto;
+  padding: 1.6rem;
+  border-right: 1px solid var(--panel-border);
+  background: rgba(251, 246, 236, 0.92);
+  box-shadow: 0 0 30px var(--panel-shadow);
+  backdrop-filter: blur(10px);
+}
+
+.panel-head h1,
+.preview-head h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.panel-head h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+.preview-head h2 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+
+.kicker {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.lede,
+.preview-note {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.control-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.control-group {
+  padding: 1rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 1rem;
+  background: rgba(255, 253, 248, 0.88);
+}
+
+.control-group h2 {
+  margin: 0 0 0.9rem;
+  font-size: 1rem;
+}
+
+.field,
+.checkbox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field span,
+.checkbox span {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 0.72rem 0.78rem;
+  border: 1px solid var(--field-border);
+  border-radius: 0.8rem;
+  background: var(--field-bg);
+  color: var(--text);
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.toggle-row {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+
+.pill {
+  position: relative;
+  flex: 1;
+}
+
+.pill input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.pill span {
+  display: block;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--field-border);
+  border-radius: 999px;
+  text-align: center;
+  background: var(--field-bg);
+}
+
+.pill input:checked + span {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.checkbox input {
+  width: 1rem;
+  height: 1rem;
+}
+
+.button-row {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.1rem;
+  cursor: pointer;
+}
+
+button.primary {
+  color: #fffaf2;
+  background: linear-gradient(135deg, #7f4d14 0%, #a66d28 100%);
+}
+
+button.secondary {
+  color: var(--text);
+  background: #efe5d2;
+}
+
+.status-card {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid var(--panel-border);
+  background: rgba(242, 226, 191, 0.55);
+}
+
+.status-label,
+.status-sub {
+  margin: 0;
+  color: var(--muted);
+}
+
+.status-main {
+  margin: 0.25rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.preview-stage {
+  padding: 1.6rem;
+}
+
+.preview-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+.pages-root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.sheet {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 16mm 15mm 20mm;
+  background: white;
+  box-shadow: 0 18px 40px rgba(42, 32, 18, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8mm;
+}
+
+.sheet-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5mm;
+}
+
+.sheet-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8mm;
+  align-items: start;
+}
+
+.sheet-header h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24pt;
+  line-height: 1.02;
+}
+
+.sheet-subtitle,
+.sheet-pack {
+  margin: 0;
+  font-size: 11pt;
+  line-height: 1.4;
+}
+
+.sheet-pack {
+  padding: 3mm 4mm;
+  border: 0.5mm solid rgba(58, 58, 58, 0.4);
+  border-radius: 4mm;
+  font-weight: 600;
+  white-space: nowrap;
+  color: rgba(31, 32, 27, 0.5);
+  font-size: 7.7pt;
+  line-height: 1;
+}
+
+.sheet-grid {
+  display: grid;
+  gap: 6mm;
+  grid-template-columns: repeat(var(--columns, 1), minmax(0, 1fr));
+  align-content: start;
+}
+
+.puzzle-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4mm;
+  min-width: 0;
+  align-items: start;
+}
+
+.puzzle-title {
+  margin: 0;
+  font-size: 15pt;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.board {
+  position: relative;
+  display: grid;
+  width: fit-content;
+  border: 0.8mm solid #505050;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: min(18pt, calc(var(--cell) * 0.48));
+  background: transparent;
+  z-index: 1;
+}
+
+.label {
+  width: min(1cm, calc(var(--cell) * 0.56));
+  height: min(1cm, calc(var(--cell) * 0.56));
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  border: 0.45mm solid #2f2f2f;
+  color: #2f2f2f;
+  z-index: 4;
+  line-height: 1;
+}
+
+.label.endpoint {
+  min-width: min(1.34cm, calc(var(--cell) * 0.76));
+  width: auto;
+  height: min(1.08cm, calc(var(--cell) * 0.62));
+  padding: 0 0.22em;
+  background: #ffffff;
+  border: 0.55mm solid #000000;
+  color: #000000;
+  border-radius: 0.42cm;
+  box-shadow: 0 0 0 0.14mm #8a8a8a;
+  font-size: 0.94em;
+  font-weight: 700;
+  text-align: center;
+  justify-content: center;
+}
+
+.label.endpoint.solution-endpoint {
+  border-width: 1.05mm;
+  box-shadow: none;
+}
+
+.grid-layer,
+.path-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.grid-layer {
+  z-index: 2;
+}
+
+.path-layer {
+  z-index: 3;
+}
+
+.sheet-footer {
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  margin-top: auto;
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm 8mm;
+  max-width: 178mm;
+}
+
+.legend-card {
+  padding: 4mm 4.5mm;
+  border: 0.5mm solid #d8d8d8;
+  border-radius: 5mm;
+  background: #ffffff;
+}
+
+.legend-card strong {
+  display: block;
+  margin-bottom: 1.5mm;
+  font-size: 11pt;
+}
+
+.error-card {
+  width: min(42rem, 100%);
+  margin: 3rem auto;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #fff7f5;
+  border: 1px solid #e0b4a6;
+}
+
+@media (max-width: 1100px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .control-panel {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .preview-head {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .control-panel,
+  .preview-head {
+    display: none !important;
+  }
+
+  .preview-stage {
+    padding: 0;
+  }
+
+  .pages-root {
+    gap: 0;
+  }
+
+  .sheet {
+    height: 297mm;
+    box-shadow: none;
+    margin: 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    page-break-after: always;
+    overflow: hidden;
+  }
+
+  .sheet:last-child {
+    page-break-after: auto;
+  }
+
+  .sheet-header,
+  .sheet-subtitle,
+  .sheet-grid,
+  .puzzle-card,
+  .board {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="control-panel">
+        <div class="panel-head">
+          <h1>Checkpoint Trail</h1>
+          <p class="lede">
+            Build printable Hamilton path worksheets in the browser. No backend, no build step.
+          </p>
+        </div>
+
+        <form id="generator-form" class="control-form">
+          <section class="control-group">
+            <h2>Bundle</h2>
+            <label class="field">
+              <span>Bundle ID</span>
+              <input id="bundle" name="bundle" inputmode="numeric" pattern="[0-9]*" required>
+            </label>
+            <div class="button-row">
+              <button type="button" class="secondary" id="bundle-now">Use Current Time</button>
+            </div>
+          </section>
+
+          <section class="control-group">
+            <h2>Board</h2>
+            <div class="toggle-row">
+              <label class="pill">
+                <input type="radio" name="shape" value="square" checked>
+                <span>Square</span>
+              </label>
+              <label class="pill">
+                <input type="radio" name="shape" value="rectangle">
+                <span>Rectangle</span>
+              </label>
+            </div>
+
+            <div id="square-fields">
+              <label class="field">
+                <span>Size</span>
+                <input id="size" name="size" type="number" min="2" max="12" value="6">
+              </label>
+            </div>
+
+            <div id="rectangle-fields" hidden>
+              <div class="field-grid">
+                <label class="field">
+                  <span>Width</span>
+                  <input id="width" name="width" type="number" min="2" max="12" value="6">
+                </label>
+                <label class="field">
+                  <span>Height</span>
+                  <input id="height" name="height" type="number" min="2" max="12" value="8">
+                </label>
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <label class="field">
+                <span>Checkpoints</span>
+                <input id="checkpoints" name="checkpoints" type="number" min="2" max="40" value="10">
+              </label>
+              <label class="field">
+                <span>Mode</span>
+                <select id="mode" name="mode">
+                  <option value="path">Path</option>
+                  <option value="circuit">Circuit</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section class="control-group">
+            <h2>Sheets</h2>
+            <div class="field-grid">
+              <label class="field">
+                <span>Games</span>
+                <input id="games" name="games" type="number" min="1" max="24" value="2">
+              </label>
+              <label class="field">
+                <span>Pack Per Page</span>
+                <input id="pack" name="pack" type="number" min="1" max="6" value="2">
+              </label>
+            </div>
+          </section>
+
+          <div class="button-row">
+            <button type="submit" class="primary">Generate Sheets</button>
+            <button type="button" class="secondary" id="print-button">Print</button>
+          </div>
+        </form>
+
+        <div class="status-card" id="status-card">
+          <p class="status-label">Current Set</p>
+          <p class="status-main" id="status-main">Ready</p>
+          <p class="status-sub" id="status-sub">2 games, 2 per page</p>
+        </div>
+      </aside>
+
+      <main class="preview-stage">
+        <div class="preview-head">
+          <div>
+            <p class="kicker">Live Preview</p>
+            <h2>Printable A4 Pages</h2>
+          </div>
+          <p class="preview-note">Preview is sized for print. Use the browser print dialog for final output.</p>
+        </div>
+        <div id="pages-root" class="pages-root"></div>
+      </main>
+    </div>
+
+    <template id="error-template">
+      <section class="error-card">
+        <h2>Cannot generate sheets</h2>
+        <p id="error-message"></p>
+      </section>
+    </template>
+
+    <script>
+const CELL_LIMIT = 144;
+const BUNDLE_BASE = 1000000000000n;
+const GOLDEN_GAMMA = 0x9e3779b97f4a7c15n;
+const MASK_64 = 0xffffffffffffffffn;
+
+const form = document.querySelector("#generator-form");
+const bundleInput = document.querySelector("#bundle");
+const bundleNowButton = document.querySelector("#bundle-now");
+const printButton = document.querySelector("#print-button");
+const squareFields = document.querySelector("#square-fields");
+const rectangleFields = document.querySelector("#rectangle-fields");
+const statusMain = document.querySelector("#status-main");
+const statusSub = document.querySelector("#status-sub");
+const pagesRoot = document.querySelector("#pages-root");
+const errorTemplate = document.querySelector("#error-template");
+
+init();
+
+function init() {
+  const initialState = readStateFromUrl();
+  applyStateToForm(initialState);
+  toggleShapeFields(initialState.shape);
+  bindEvents();
+  renderFromForm();
+}
+
+function bindEvents() {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    renderFromForm();
+  });
+
+  form.shape.forEach((input) => {
+    input.addEventListener("change", () => toggleShapeFields(input.value));
+  });
+
+  bundleNowButton.addEventListener("click", () => {
+    bundleInput.value = String(defaultBundle());
+    renderFromForm();
+  });
+
+  printButton.addEventListener("click", () => window.print());
+}
+
+function readStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    bundle: params.get("bundle") ?? String(defaultBundle()),
+    shape: params.get("shape") === "rectangle" ? "rectangle" : "square",
+    size: params.get("size") ?? "6",
+    width: params.get("width") ?? "6",
+    height: params.get("height") ?? "8",
+    checkpoints: params.get("checkpoints") ?? "10",
+    games: params.get("games") ?? "2",
+    pack: params.get("pack") ?? "2",
+    mode: params.get("mode") === "circuit" ? "circuit" : "path",
+  };
+}
+
+function applyStateToForm(state) {
+  bundleInput.value = state.bundle;
+  form.shape.value = state.shape;
+  form.size.value = state.size;
+  form.width.value = state.width;
+  form.height.value = state.height;
+  form.checkpoints.value = state.checkpoints;
+  form.games.value = state.games;
+  form.pack.value = state.pack;
+  form.mode.value = state.mode;
+}
+
+function toggleShapeFields(shape) {
+  squareFields.hidden = shape !== "square";
+  rectangleFields.hidden = shape !== "rectangle";
+}
+
+function renderFromForm() {
+  try {
+    const settings = readSettingsFromForm();
+    syncUrl(settings);
+    const puzzles = buildPuzzlePack(settings);
+    const pages = renderPages(puzzles, settings);
+    pagesRoot.innerHTML = pages;
+    const totalPages = Math.ceil(settings.games / settings.pack) * 2;
+    statusMain.textContent = `${settings.games} game${settings.games === 1 ? "" : "s"} ready`;
+    statusSub.textContent = `${settings.pack} per page, ${totalPages} printable page${totalPages === 1 ? "" : "s"}`;
+  } catch (error) {
+    renderError(error instanceof Error ? error.message : String(error));
+  }
+}
+
+function readSettingsFromForm() {
+  const shape = form.shape.value;
+  const bundleText = bundleInput.value.trim();
+  if (!/^\d+$/.test(bundleText)) {
+    throw new Error("Bundle must contain digits only.");
+  }
+
+  const bundle = BigInt(bundleText);
+  if (bundle < 0 || bundle >= BUNDLE_BASE) {
+    throw new Error("Bundle must be smaller than 10^12.");
+  }
+
+  const size = parseInteger(form.size.value, "Size");
+  const width = shape === "square" ? size : parseInteger(form.width.value, "Width");
+  const height = shape === "square" ? size : parseInteger(form.height.value, "Height");
+  const checkpoints = parseInteger(form.checkpoints.value, "Checkpoints");
+  const games = parseInteger(form.games.value, "Games");
+  const pack = parseInteger(form.pack.value, "Pack per page");
+  const mode = form.mode.value;
+
+  if (width < 2 || height < 2) {
+    throw new Error("Board dimensions must both be at least 2.");
+  }
+  if (width * height > CELL_LIMIT) {
+    throw new Error(`Board area must stay at or below ${CELL_LIMIT} cells.`);
+  }
+  if (mode === "circuit" && (width * height) % 2 !== 0) {
+    throw new Error("Circuit mode needs an even number of cells.");
+  }
+  if (checkpoints < 2 || checkpoints > width * height) {
+    throw new Error("Checkpoints must fit within the board.");
+  }
+  if (games < 1 || pack < 1) {
+    throw new Error("Games and pack must both be at least 1.");
+  }
+
+  return {
+    bundle,
+    bundleText,
+    shape,
+    width,
+    height,
+    checkpoints,
+    games,
+    pack,
+    mode,
+    instructions: instructionsForMode(mode, checkpoints),
+  };
+}
+
+function parseInteger(value, label) {
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isFinite(parsed)) {
+    throw new Error(`${label} must be a whole number.`);
+  }
+  return parsed;
+}
+
+function syncUrl(settings) {
+  const params = new URLSearchParams({
+    bundle: settings.bundleText,
+    shape: settings.shape,
+    size: String(settings.width),
+    width: String(settings.width),
+    height: String(settings.height),
+    checkpoints: String(settings.checkpoints),
+    games: String(settings.games),
+    pack: String(settings.pack),
+    mode: settings.mode,
+  });
+  const url = `${window.location.pathname}?${params.toString()}`;
+  window.history.replaceState({}, "", url);
+}
+
+function buildPuzzlePack(settings) {
+  const puzzles = [];
+  for (let gameIndex = 0; gameIndex < settings.games; gameIndex += 1) {
+    const seed = deriveGameSeed(settings.bundle, gameIndex);
+    puzzles.push(buildPuzzle(seed, gameIndex, settings));
+  }
+  return puzzles;
+}
+
+function buildPuzzle(seed, gameIndex, settings) {
+  const rng = createRng(seed);
+  const path = generateHamiltonianPath(settings.width, settings.height, settings.mode, rng);
+  return {
+    title: "Checkpoint Trail",
+    instructions: settings.instructions,
+    width: settings.width,
+    height: settings.height,
+    mode: settings.mode,
+    gameIndex,
+    checkpoints: selectCheckpoints(path, settings.checkpoints),
+    solutionPath: path,
+    seed,
+  };
+}
+
+function deriveGameSeed(bundle, gameIndex) {
+  return BigInt(gameIndex) * BUNDLE_BASE + bundle;
+}
+
+function defaultBundle(date = new Date()) {
+  const yy = String(date.getFullYear()).slice(-2);
+  const MM = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  const HH = String(date.getHours()).padStart(2, "0");
+  const mm = String(date.getMinutes()).padStart(2, "0");
+  const ss = String(date.getSeconds()).padStart(2, "0");
+  return Number(`${yy}${MM}${dd}${HH}${mm}${ss}`);
+}
+
+function createRng(seed) {
+  let state = BigInt.asUintN(64, seed);
+  return {
+    nextFloat() {
+      state = BigInt.asUintN(64, state + GOLDEN_GAMMA);
+      let z = state;
+      z = BigInt.asUintN(64, (z ^ (z >> 30n)) * 0xbf58476d1ce4e5b9n);
+      z = BigInt.asUintN(64, (z ^ (z >> 27n)) * 0x94d049bb133111ebn);
+      z ^= z >> 31n;
+      return Number(z & ((1n << 53n) - 1n)) / 2 ** 53;
+    },
+    nextInt(maxExclusive) {
+      return Math.floor(this.nextFloat() * maxExclusive);
+    },
+  };
+}
+
+function generateHamiltonianPath(width, height, mode, rng) {
+  const path = serpentinePath(width, height);
+  let bestPath = path.slice();
+  let bestScore = modeScore(bestPath, mode);
+  const attempts = 12;
+  const iterations = Math.max(300, width * height * 40);
+
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const candidate = path.slice();
+    randomizePath(candidate, width, height, rng, iterations);
+    const score = modeScore(candidate, mode);
+    if (score > bestScore) {
+      bestPath = candidate.slice();
+      bestScore = score;
+    }
+    if (matchesMode(candidate, mode) && pathScore(candidate) >= Math.max(10, Math.floor((width * height) / 3))) {
+      bestPath = candidate.slice();
+      break;
+    }
+  }
+
+  if (!matchesMode(bestPath, mode)) {
+    bestPath = forceModeMatch(bestPath, width, height, mode, rng);
+  }
+
+  return bestPath;
+}
+
+function serpentinePath(width, height) {
+  const path = [];
+  for (let row = 0; row < height; row += 1) {
+    if (row % 2 === 0) {
+      for (let col = 0; col < width; col += 1) {
+        path.push({ row, col });
+      }
+    } else {
+      for (let col = width - 1; col >= 0; col -= 1) {
+        path.push({ row, col });
+      }
+    }
+  }
+  return path;
+}
+
+function randomizePath(path, width, height, rng, iterations) {
+  for (let step = 0; step < iterations; step += 1) {
+    backbiteStep(path, width, height, rng);
+  }
+}
+
+function backbiteStep(path, width, height, rng) {
+  const fromStart = rng.nextFloat() < 0.5;
+  const endpointIndex = fromStart ? 0 : path.length - 1;
+  const blockedIndex = fromStart ? 1 : path.length - 2;
+  const endpoint = path[endpointIndex];
+  const blockedNeighbor = path[blockedIndex];
+  const candidates = neighbors(endpoint, width, height)
+    .filter((point) => !samePoint(point, blockedNeighbor));
+  shuffle(candidates, rng);
+
+  const positions = new Map(path.map((point, index) => [pointKey(point), index]));
+  for (const candidate of candidates) {
+    const cutIndex = positions.get(pointKey(candidate));
+    if (fromStart) {
+      if (cutIndex <= 1) {
+        continue;
+      }
+      const prefix = path.slice(0, cutIndex).reverse();
+      path.splice(0, cutIndex, ...prefix);
+      return true;
+    }
+    if (cutIndex >= path.length - 2) {
+      continue;
+    }
+    const suffix = path.slice(cutIndex + 1).reverse();
+    path.splice(cutIndex + 1, suffix.length, ...suffix);
+    return true;
+  }
+  return false;
+}
+
+function neighbors(point, width, height) {
+  const result = [];
+  if (point.row > 0) {
+    result.push({ row: point.row - 1, col: point.col });
+  }
+  if (point.row + 1 < height) {
+    result.push({ row: point.row + 1, col: point.col });
+  }
+  if (point.col > 0) {
+    result.push({ row: point.row, col: point.col - 1 });
+  }
+  if (point.col + 1 < width) {
+    result.push({ row: point.row, col: point.col + 1 });
+  }
+  return result;
+}
+
+function samePoint(first, second) {
+  return first.row === second.row && first.col === second.col;
+}
+
+function pointKey(point) {
+  return `${point.row}:${point.col}`;
+}
+
+function pointsAdjacent(first, second) {
+  return Math.abs(first.row - second.row) + Math.abs(first.col - second.col) === 1;
+}
+
+function matchesMode(path, mode) {
+  return mode === "circuit"
+    ? pointsAdjacent(path[0], path[path.length - 1])
+    : !pointsAdjacent(path[0], path[path.length - 1]);
+}
+
+function forceModeMatch(path, width, height, mode, rng) {
+  const candidate = path.slice();
+  const limit = Math.max(500, width * height * 80);
+  for (let count = 0; count < limit; count += 1) {
+    backbiteStep(candidate, width, height, rng);
+    if (matchesMode(candidate, mode)) {
+      return candidate;
+    }
+  }
+  throw new Error(`Unable to generate a ${mode} puzzle for this board.`);
+}
+
+function pathScore(path) {
+  let turns = 0;
+  for (let index = 0; index < path.length - 2; index += 1) {
+    const first = path[index];
+    const second = path[index + 1];
+    const third = path[index + 2];
+    const a = [second.row - first.row, second.col - first.col];
+    const b = [third.row - second.row, third.col - second.col];
+    if (a[0] !== b[0] || a[1] !== b[1]) {
+      turns += 1;
+    }
+  }
+  return turns;
+}
+
+function modeScore(path, mode) {
+  const score = pathScore(path);
+  return mode === "circuit"
+    ? score + (matchesMode(path, mode) ? 1000 : 0)
+    : score + (matchesMode(path, mode) ? 1000 : -1000);
+}
+
+function selectCheckpoints(path, checkpointCount) {
+  const checkpoints = [];
+  const lastIndex = path.length - 1;
+  for (let position = 0; position < checkpointCount; position += 1) {
+    const index = Math.round((position * lastIndex) / (checkpointCount - 1));
+    checkpoints.push(path[index]);
+  }
+  return checkpoints;
+}
+
+function instructionsForMode(mode, checkpointCount) {
+  if (mode === "circuit") {
+    return `Draw one closed circuit through every square exactly once. Follow checkpoints 1 to ${checkpointCount} in order. Checkpoint 1 and checkpoint ${checkpointCount} sit next to each other because the circuit closes there.`;
+  }
+  return `Draw one non-closed path through every square exactly once. Follow checkpoints 1 to ${checkpointCount} in order. Checkpoint 1 begins the path and checkpoint ${checkpointCount} ends it.`;
+}
+
+function renderPages(puzzles, settings) {
+  const pages = [];
+  for (let index = 0; index < puzzles.length; index += settings.pack) {
+    const chunk = puzzles.slice(index, index + settings.pack);
+    pages.push(renderSheet(chunk, settings, Math.floor(index / settings.pack), false));
+  }
+  for (let index = 0; index < puzzles.length; index += settings.pack) {
+    const chunk = puzzles.slice(index, index + settings.pack);
+    pages.push(renderSheet(chunk, settings, Math.floor(index / settings.pack), true));
+  }
+  return pages.join("");
+}
+
+function renderSheet(puzzles, settings, pageIndex, showSolution) {
+  const [columns, rows] = pageGridDimensions(settings.pack);
+  const heading = showSolution ? "Solutions" : "Checkpoint Trail";
+  const subtitle = showSolution ? "" : `${settings.instructions} Board: ${settings.width} x ${settings.height}.`;
+  const cards = puzzles
+    .map((puzzle) => renderPuzzleCard(puzzle, showSolution, columns, rows))
+    .join("");
+  const legend = showSolution
+    ? ""
+    : `<div class="legend"><div class="legend-card"><strong>How to solve</strong>Draw lines up, down, left, or right only.</div><div class="legend-card"><strong>Remember</strong>Visit all ${settings.width * settings.height} squares once and keep the checkpoints in order.</div></div>`;
+
+  return `
+    <section class="sheet">
+      <header class="sheet-header">
+        <p class="kicker">${showSolution ? "Solution Sheets" : "A Hamiltonian path puzzle"}</p>
+        <div class="sheet-title-row">
+          <h3>${escapeHtml(heading)}</h3>
+          <p class="sheet-pack">bundle ${settings.bundleText} / page ${pageIndex + 1}</p>
+        </div>
+      </header>
+      ${subtitle ? `<p class="sheet-subtitle">${escapeHtml(subtitle)}</p>` : ""}
+      <div class="sheet-grid" style="--columns:${columns};">
+        ${cards}
+      </div>
+      <footer class="sheet-footer">
+        ${legend}
+      </footer>
+    </section>
+  `;
+}
+
+function renderPuzzleCard(puzzle, showSolution, columns, rows) {
+  const cell = cellSizeMm(puzzle.width, puzzle.height, columns, rows, showSolution);
+  return `
+    <article class="puzzle-card">
+      <h4 class="puzzle-title">Game ${puzzle.gameIndex + 1}</h4>
+      ${renderBoard(puzzle, showSolution, cell)}
+    </article>
+  `;
+}
+
+function pageGridDimensions(pack) {
+  if (pack <= 1) {
+    return [1, 1];
+  }
+  if (pack === 2) {
+    return [1, 2];
+  }
+  return [2, Math.ceil(pack / 2)];
+}
+
+function cellSizeMm(width, height, columns, rows, showSolution) {
+  const pageWidth = 180;
+  const pageHeight = 267;
+  const gridGap = 6;
+  const footer = showSolution ? 0 : 22;
+  const header = 24;
+  const subtitle = 12;
+  const slotWidth = (pageWidth - (columns - 1) * gridGap) / columns;
+  const slotHeight = (pageHeight - header - subtitle - footer - (rows - 1) * gridGap) / rows;
+  const boardWidth = slotWidth;
+  const boardHeight = slotHeight - 10;
+  return Math.max(4.8, Math.min(27, boardWidth / width, boardHeight / height));
+}
+
+function renderBoard(puzzle, showSolution, cellSizeMmValue) {
+  const checkpointMap = new Map(puzzle.checkpoints.map((point, index) => [pointKey(point), String(index + 1)]));
+  const endpointSet = new Set([
+    pointKey(puzzle.checkpoints[0]),
+    pointKey(puzzle.checkpoints[puzzle.checkpoints.length - 1]),
+  ]);
+  const solutionEndpointSet = showSolution
+    ? new Set([pointKey(puzzle.solutionPath[0]), pointKey(puzzle.solutionPath[puzzle.solutionPath.length - 1])])
+    : new Set();
+  const cells = [];
+  for (let row = 0; row < puzzle.height; row += 1) {
+    for (let col = 0; col < puzzle.width; col += 1) {
+      const key = pointKey({ row, col });
+      const label = checkpointMap.get(key);
+      let labelMarkup = "";
+      if (label) {
+        const classes = ["label"];
+        if (endpointSet.has(key)) {
+          classes.push("endpoint");
+          if (solutionEndpointSet.has(key)) {
+            classes.push("solution-endpoint");
+          }
+        }
+        labelMarkup = `<span class="${classes.join(" ")}">${escapeHtml(label)}</span>`;
+      }
+      cells.push(`<div class="cell">${labelMarkup}</div>`);
+    }
+  }
+
+  const boardStyle = [
+    `--cell:${cellSizeMmValue.toFixed(2)}mm`,
+    `grid-template-columns:repeat(${puzzle.width}, ${cellSizeMmValue.toFixed(2)}mm)`,
+    `grid-template-rows:repeat(${puzzle.height}, ${cellSizeMmValue.toFixed(2)}mm)`,
+  ].join("; ");
+
+  return `
+    <div class="board" style="${boardStyle}">
+      ${renderGridSvg(puzzle.width, puzzle.height)}
+      ${renderPathSvg(puzzle, showSolution)}
+      ${cells.join("")}
+    </div>
+  `;
+}
+
+function renderGridSvg(width, height) {
+  const viewBoxWidth = width * 100;
+  const viewBoxHeight = height * 100;
+  const bleed = 8;
+  const verticals = Array.from({ length: width - 1 }, (_, index) => {
+    const x = (index + 1) * 100;
+    return `<line x1="${x}" y1="${-bleed}" x2="${x}" y2="${viewBoxHeight + bleed}"></line>`;
+  }).join("");
+  const horizontals = Array.from({ length: height - 1 }, (_, index) => {
+    const y = (index + 1) * 100;
+    return `<line x1="${-bleed}" y1="${y}" x2="${viewBoxWidth + bleed}" y2="${y}"></line>`;
+  }).join("");
+  return `
+    <svg class="grid-layer" viewBox="0 0 ${viewBoxWidth} ${viewBoxHeight}" aria-hidden="true">
+      <g stroke="#6b6b6b" stroke-width="3.6" stroke-linecap="square" shape-rendering="crispEdges">
+        ${verticals}
+        ${horizontals}
+      </g>
+    </svg>
+  `;
+}
+
+function renderPathSvg(puzzle, showSolution) {
+  const viewBoxWidth = puzzle.width * 100;
+  const viewBoxHeight = puzzle.height * 100;
+  if (!showSolution) {
+    return `<svg class="path-layer" viewBox="0 0 ${viewBoxWidth} ${viewBoxHeight}" aria-hidden="true"></svg>`;
+  }
+
+  const points = puzzle.solutionPath.map((point) => `${point.col * 100 + 50},${point.row * 100 + 50}`);
+  if (puzzle.mode === "circuit") {
+    points.push(`${puzzle.solutionPath[0].col * 100 + 50},${puzzle.solutionPath[0].row * 100 + 50}`);
+  }
+  const clipId = `clip-${puzzle.gameIndex}-${showSolution ? "solution" : "puzzle"}`;
+  return `
+    <svg class="path-layer" viewBox="0 0 ${viewBoxWidth} ${viewBoxHeight}" aria-hidden="true">
+      <defs>
+        <clipPath id="${clipId}">
+          <rect x="0" y="0" width="${viewBoxWidth}" height="${viewBoxHeight}"></rect>
+        </clipPath>
+      </defs>
+      <g clip-path="url(#${clipId})">
+        <polyline
+          points="${points.join(" ")}"
+          fill="none"
+          stroke="#111111"
+          stroke-width="10"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          opacity="0.34"
+        ></polyline>
+      </g>
+    </svg>
+  `;
+}
+
+function renderError(message) {
+  const fragment = errorTemplate.content.cloneNode(true);
+  fragment.querySelector("#error-message").textContent = message;
+  pagesRoot.innerHTML = "";
+  pagesRoot.append(fragment);
+  statusMain.textContent = "Invalid settings";
+  statusSub.textContent = message;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function shuffle(array, rng) {
+  for (let index = array.length - 1; index > 0; index -= 1) {
+    const swapIndex = rng.nextInt(index + 1);
+    [array[index], array[swapIndex]] = [array[swapIndex], array[index]];
+  }
+}
+    </script>
+  </body>
+</html>

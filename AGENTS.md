@@ -2,33 +2,27 @@
 
 ## Project purpose
 
-This repository contains `hampuz`, a small Python project for generating printable Hamilton path puzzles for primary school students. The current output target is controlled-layout HTML sized for A4 printing.
+This repository is a static GitHub Pages web app for generating printable Hamilton puzzle worksheets in the browser.
 
 ## Working rules
 
-- Use Python with `uv`.
-- Keep dependencies minimal. Prefer the standard library unless a dependency clearly improves puzzle generation or rendering.
-- Add new runtime or dev dependencies to `requirements.in`, then regenerate `requirements.txt` with `uv pip compile requirements.in -o requirements.txt`.
-- Default output should remain the system temp directory joined with `hampuz` unless the user explicitly requests something else.
-- Default the bundle id to `int(yyMMddHHmmss)` unless the user provides one explicitly.
-- Support both `--size N` and `--width/--height` board configuration patterns.
-- Support both non-closed path mode and `--circuit` mode.
-- Support page packing with `--pack`; default to 2 games per page.
-- Derive each game's randomization deterministically from the bundle id and game index, but keep the printed output focused on the bundle id only.
-- Keep the print layout stable. Avoid fluid browser-dependent sizing for the main puzzle board.
-- Keep the puzzle tone suitable for primary school students.
+- The browser app is the source of truth. Edit `index.html`.
+- Keep the site build-free. Do not introduce a framework or bundler unless explicitly requested.
+- Prefer a single self-contained `index.html` so the app works via both GitHub Pages and direct `file:` usage.
+- Preserve deterministic generation from the bundle id and game index.
+- Keep the printed output tightly controlled for A4 pages. Avoid fluid print layouts.
+- Keep the on-screen controls simple and the print pages uncluttered.
+- Keep the GitHub Pages deployment workflow working; this repo deploys from GitHub Actions.
 - Use Conventional Commit style if creating commits.
 
 ## Current implementation
 
-- Package source lives in `src/hampuz/`.
-- CLI entrypoint is `hampuz`, implemented in `src/hampuz/cli.py`.
-- Puzzle generation and HTML rendering live in `src/hampuz/generator.py`.
-- The current generator supports configurable rectangular boards up to 144 cells, numbered checkpoints, path/circuit modes, packed worksheet pages, and optional solution pages.
+- `index.html` contains the UI shell, styling, puzzle generator, URL state handling, and HTML rendering.
+- `.github/workflows/deploy-pages.yml` deploys the static site to GitHub Pages.
+- `.nojekyll` keeps GitHub Pages in plain static-site mode.
 
 ## Expectations for future sessions
 
-- Verify the generated HTML locally after layout changes.
-- If changing puzzle rules, update both `README.md` and CLI help text.
-- Do not replace fixed print sizing with responsive-only layouts unless explicitly requested.
-- Preserve deterministic generation from a seed so results are reproducible.
+- Verify both screen layout and print layout after visual changes.
+- Keep the app deployable on GitHub Pages without a build step.
+- If changing query params or UI wording, update `README.md` too.
