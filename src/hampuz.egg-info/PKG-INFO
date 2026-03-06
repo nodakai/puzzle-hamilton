@@ -1,0 +1,50 @@
+Metadata-Version: 2.4
+Name: hampuz
+Version: 0.1.0
+Summary: Generate printable Hamilton path puzzles for primary school students.
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+
+# hampuz
+
+`hampuz` generates printable Hamilton path puzzle sheets for primary school students. The first version produces a tightly controlled A4 HTML layout for a 6x6 checkpoint puzzle and writes output to the system temp directory by default.
+
+## What it does
+
+- Builds a 6x6 Hamilton path puzzle with 10 ordered checkpoints by default
+- Renders a fixed-size printable HTML worksheet
+- Optionally includes a second page with the solution path for teachers
+- Uses only the Python standard library at runtime
+
+## Quick start
+
+```bash
+uv venv
+source .venv/bin/activate
+uv pip compile requirements.in -o requirements.txt
+uv pip sync requirements.txt
+uv pip install -e .
+hampuz --seed 36
+```
+
+The command prints the output path, which defaults to:
+
+```text
+$(python -c 'import tempfile; print(tempfile.gettempdir())')/hampuz/
+```
+
+## Useful commands
+
+```bash
+hampuz --seed 42
+hampuz --seed 42 --checkpoints 12 --no-solution
+hampuz --seed 42 --output ./output/puzzle.html
+pytest
+python -m hampuz.cli --seed 42
+```
+
+## Notes
+
+- The initial generator uses deterministic path transforms on a valid 6x6 Hamilton path.
+- The HTML is intentionally not fluid; it targets predictable print output on A4 paper.
+- If you add dependencies, update `requirements.in` first and regenerate `requirements.txt` with `uv pip compile`.
