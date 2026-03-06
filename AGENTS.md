@@ -14,6 +14,13 @@ This repository is a static GitHub Pages web app for generating printable Hamilt
 - Keep the on-screen controls simple and the print pages uncluttered.
 - Keep the GitHub Pages deployment workflow working; this repo deploys from GitHub Actions.
 - Use Conventional Commit style if creating commits.
+- Treat translation as product writing, not word-for-word substitution.
+- Keep terminology internally consistent within each locale, especially for puzzle concepts like path, circuit, start, end, and the ordered hints on the board.
+- Avoid transliteration when a native-friendly activity title or puzzle term would read better to local users.
+- When a direct equivalent sounds stiff or technical, prefer child-friendly wording that still preserves the puzzle rule.
+- Prefer visible, classroom-natural wording when that is what children actually see on the page; for example, a locale may work better with a term like “circled numbers” than a literal equivalent of “checkpoint”.
+- A locale does not need a literal equivalent of “checkpoint” at all. It may instead frame the puzzle around numbered circles, stops, marks, clues, or simply “follow 1, 2, 3...” if that reads more naturally.
+- UI labels, reminder text, and solve instructions do not have to reuse the exact same noun if native speakers would prefer a lighter or more visual phrasing in one of those contexts. Aim for coherence, not rigid one-to-one wording.
 
 ## Current implementation
 

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hampuz</title>
+    <title>Checkpoint Trail</title>
     <meta
       name="description"
-      content="Generate printable Hamilton path and circuit puzzles directly in the browser."
+      content="Create printable trail puzzles directly in the browser."
     >
     <style>
 :root {
@@ -214,6 +214,10 @@ button.secondary {
   border-radius: 1rem;
   border: 1px solid var(--panel-border);
   background: rgba(242, 226, 191, 0.55);
+}
+
+.locale-bar {
+  margin-top: 1rem;
 }
 
 .status-label,
@@ -486,40 +490,40 @@ button.secondary {
     <div class="app-shell">
       <aside class="control-panel">
         <div class="panel-head">
-          <h1>Checkpoint Trail</h1>
+          <h1 data-i18n="appTitle">Checkpoint Trail</h1>
           <p class="lede">
-            Build printable Hamilton path worksheets in the browser. No backend, no build step.
+            <span data-i18n="appLead">Create printable trail puzzles right in your browser.</span>
           </p>
         </div>
 
         <form id="generator-form" class="control-form">
           <section class="control-group">
-            <h2>Bundle</h2>
+            <h2 data-i18n="bundleSection">Bundle</h2>
             <label class="field">
-              <span>Bundle ID</span>
+              <span data-i18n="bundleId">Bundle ID</span>
               <input id="bundle" name="bundle" inputmode="numeric" pattern="[0-9]*" required>
             </label>
             <div class="button-row">
-              <button type="button" class="secondary" id="bundle-now">Use Current Time</button>
+              <button type="button" class="secondary" id="bundle-now" data-i18n="useCurrentTime">Use Current Time</button>
             </div>
           </section>
 
           <section class="control-group">
-            <h2>Board</h2>
+            <h2 data-i18n="boardSection">Board</h2>
             <div class="toggle-row">
               <label class="pill">
                 <input type="radio" name="shape" value="square" checked>
-                <span>Square</span>
+                <span data-i18n="square">Square</span>
               </label>
               <label class="pill">
                 <input type="radio" name="shape" value="rectangle">
-                <span>Rectangle</span>
+                <span data-i18n="rectangle">Rectangle</span>
               </label>
             </div>
 
             <div id="square-fields">
               <label class="field">
-                <span>Size</span>
+                <span data-i18n="size">Size</span>
                 <input id="size" name="size" type="number" min="2" max="12" value="6">
               </label>
             </div>
@@ -527,11 +531,11 @@ button.secondary {
             <div id="rectangle-fields" hidden>
               <div class="field-grid">
                 <label class="field">
-                  <span>Width</span>
+                  <span data-i18n="width">Width</span>
                   <input id="width" name="width" type="number" min="2" max="12" value="6">
                 </label>
                 <label class="field">
-                  <span>Height</span>
+                  <span data-i18n="height">Height</span>
                   <input id="height" name="height" type="number" min="2" max="12" value="8">
                 </label>
               </div>
@@ -539,53 +543,72 @@ button.secondary {
 
             <div class="field-grid">
               <label class="field">
-                <span>Checkpoints</span>
-                <input id="checkpoints" name="checkpoints" type="number" min="2" max="40" value="10">
+                <span data-i18n="checkpoints">Checkpoints</span>
+                <input id="checkpoints" name="checkpoints" type="number" min="2" max="144" value="10">
               </label>
               <label class="field">
-                <span>Mode</span>
+                <span data-i18n="mode">Mode</span>
                 <select id="mode" name="mode">
-                  <option value="path">Path</option>
-                  <option value="circuit">Circuit</option>
+                  <option value="path" data-i18n="path">Path</option>
+                  <option value="circuit" data-i18n="circuit">Circuit</option>
                 </select>
               </label>
             </div>
           </section>
 
           <section class="control-group">
-            <h2>Sheets</h2>
+            <h2 data-i18n="sheetsSection">Sheets</h2>
             <div class="field-grid">
               <label class="field">
-                <span>Games</span>
+                <span data-i18n="games">Games</span>
                 <input id="games" name="games" type="number" min="1" max="24" value="2">
               </label>
               <label class="field">
-                <span>Pack Per Page</span>
+                <span data-i18n="packPerPage">Games Per Page</span>
                 <input id="pack" name="pack" type="number" min="1" max="6" value="2">
               </label>
             </div>
           </section>
 
           <div class="button-row">
-            <button type="submit" class="primary">Generate Sheets</button>
-            <button type="button" class="secondary" id="print-button">Print</button>
+            <button type="submit" class="primary" data-i18n="generateSheets">Generate Sheets</button>
+            <button type="button" class="secondary" id="print-button" data-i18n="print">Print</button>
           </div>
         </form>
 
         <div class="status-card" id="status-card">
-          <p class="status-label">Current Set</p>
+          <p class="status-label" data-i18n="currentSet">Print Summary</p>
           <p class="status-main" id="status-main">Ready</p>
           <p class="status-sub" id="status-sub">2 games, 2 per page</p>
+        </div>
+
+        <div class="locale-bar">
+          <label class="field">
+            <span data-i18n="language">Language</span>
+            <select id="lang-select" data-i18n-aria-label="language" aria-label="Language">
+              <option value="en">English</option>
+              <option value="zh">中文</option>
+              <option value="hi">हिन्दी</option>
+              <option value="ar">العربية</option>
+              <option value="id">Bahasa Indonesia</option>
+              <option value="ja">日本語</option>
+              <option value="tr">Türkçe</option>
+              <option value="vi">Tiếng Việt</option>
+              <option value="ko">한국어</option>
+              <option value="fa">فارسی</option>
+              <option value="sw">Kiswahili</option>
+            </select>
+          </label>
         </div>
       </aside>
 
       <main class="preview-stage">
         <div class="preview-head">
           <div>
-            <p class="kicker">Live Preview</p>
-            <h2>Printable A4 Pages</h2>
+            <p class="kicker" data-i18n="livePreview">Preview</p>
+            <h2 data-i18n="printablePages">Printable Pages</h2>
           </div>
-          <p class="preview-note">Preview is sized for print. Use the browser print dialog for final output.</p>
+          <p class="preview-note" data-i18n="previewNote">Use your browser print dialog for final output.</p>
         </div>
         <div id="pages-root" class="pages-root"></div>
       </main>
@@ -593,7 +616,7 @@ button.secondary {
 
     <template id="error-template">
       <section class="error-card">
-        <h2>Cannot generate sheets</h2>
+        <h2 data-i18n="cannotGenerate">Could not create pages</h2>
         <p id="error-message"></p>
       </section>
     </template>
@@ -614,11 +637,13 @@ const statusMain = document.querySelector("#status-main");
 const statusSub = document.querySelector("#status-sub");
 const pagesRoot = document.querySelector("#pages-root");
 const errorTemplate = document.querySelector("#error-template");
-
-init();
+const langSelect = document.querySelector("#lang-select");
+let currentLocale = "en";
 
 function init() {
   const initialState = readStateFromUrl();
+  langSelect.value = currentLocale;
+  applyStaticTranslations();
   applyStateToForm(initialState);
   toggleShapeFields(initialState.shape);
   bindEvents();
@@ -641,12 +666,19 @@ function bindEvents() {
   });
 
   printButton.addEventListener("click", () => window.print());
+
+  langSelect.addEventListener("change", () => {
+    currentLocale = langSelect.value;
+    applyStaticTranslations();
+    renderFromForm();
+  });
 }
 
 function readStateFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return {
     bundle: params.get("bundle") ?? String(defaultBundle()),
+    lang: params.get("lang") ?? "",
     shape: params.get("shape") === "rectangle" ? "rectangle" : "square",
     size: params.get("size") ?? "6",
     width: params.get("width") ?? "6",
@@ -683,8 +715,8 @@ function renderFromForm() {
     const pages = renderPages(puzzles, settings);
     pagesRoot.innerHTML = pages;
     const totalPages = Math.ceil(settings.games / settings.pack) * 2;
-    statusMain.textContent = `${settings.games} game${settings.games === 1 ? "" : "s"} ready`;
-    statusSub.textContent = `${settings.pack} per page, ${totalPages} printable page${totalPages === 1 ? "" : "s"}`;
+    statusMain.textContent = tPlural("gamesReady", settings.games, { count: settings.games });
+    statusSub.textContent = tPlural("pagesSummary", totalPages, { pack: settings.pack, count: totalPages });
   } catch (error) {
     renderError(error instanceof Error ? error.message : String(error));
   }
@@ -694,36 +726,36 @@ function readSettingsFromForm() {
   const shape = form.shape.value;
   const bundleText = bundleInput.value.trim();
   if (!/^\d+$/.test(bundleText)) {
-    throw new Error("Bundle must contain digits only.");
+    throw new Error(t("errorBundleDigits"));
   }
 
   const bundle = BigInt(bundleText);
   if (bundle < 0 || bundle >= BUNDLE_BASE) {
-    throw new Error("Bundle must be smaller than 10^12.");
+    throw new Error(t("errorBundleRange"));
   }
 
-  const size = parseInteger(form.size.value, "Size");
-  const width = shape === "square" ? size : parseInteger(form.width.value, "Width");
-  const height = shape === "square" ? size : parseInteger(form.height.value, "Height");
-  const checkpoints = parseInteger(form.checkpoints.value, "Checkpoints");
-  const games = parseInteger(form.games.value, "Games");
-  const pack = parseInteger(form.pack.value, "Pack per page");
+  const size = parseInteger(form.size.value, t("size"));
+  const width = shape === "square" ? size : parseInteger(form.width.value, t("width"));
+  const height = shape === "square" ? size : parseInteger(form.height.value, t("height"));
+  const checkpoints = parseInteger(form.checkpoints.value, t("checkpoints"));
+  const games = parseInteger(form.games.value, t("games"));
+  const pack = parseInteger(form.pack.value, t("packPerPage"));
   const mode = form.mode.value;
 
   if (width < 2 || height < 2) {
-    throw new Error("Board dimensions must both be at least 2.");
+    throw new Error(t("errorBoardMin"));
   }
   if (width * height > CELL_LIMIT) {
-    throw new Error(`Board area must stay at or below ${CELL_LIMIT} cells.`);
+    throw new Error(t("errorBoardArea", { limit: CELL_LIMIT }));
   }
   if (mode === "circuit" && (width * height) % 2 !== 0) {
-    throw new Error("Circuit mode needs an even number of cells.");
+    throw new Error(t("errorCircuitEven"));
   }
   if (checkpoints < 2 || checkpoints > width * height) {
-    throw new Error("Checkpoints must fit within the board.");
+    throw new Error(t("errorCheckpointsFit"));
   }
   if (games < 1 || pack < 1) {
-    throw new Error("Games and pack must both be at least 1.");
+    throw new Error(t("errorGamesPackMin"));
   }
 
   return {
@@ -743,7 +775,7 @@ function readSettingsFromForm() {
 function parseInteger(value, label) {
   const parsed = Number.parseInt(value, 10);
   if (!Number.isFinite(parsed)) {
-    throw new Error(`${label} must be a whole number.`);
+    throw new Error(t("errorWholeNumber", { label }));
   }
   return parsed;
 }
@@ -760,15 +792,27 @@ function syncUrl(settings) {
     pack: String(settings.pack),
     mode: settings.mode,
   });
-  const url = `${window.location.pathname}?${params.toString()}`;
-  window.history.replaceState({}, "", url);
+  params.set("lang", currentLocale);
+  const finalUrl = `${window.location.pathname}?${params.toString()}`;
+  window.history.replaceState({}, "", finalUrl);
 }
 
 function buildPuzzlePack(settings) {
   const puzzles = [];
+  const usedPathFingerprints = new Set();
+  const usedVisibleFingerprints = new Set();
   for (let gameIndex = 0; gameIndex < settings.games; gameIndex += 1) {
-    const seed = deriveGameSeed(settings.bundle, gameIndex);
-    puzzles.push(buildPuzzle(seed, gameIndex, settings));
+    const puzzle = buildDiversePuzzle(
+      settings.bundle,
+      gameIndex,
+      settings,
+      puzzles,
+      usedPathFingerprints,
+      usedVisibleFingerprints,
+    );
+    puzzles.push(puzzle);
+    usedPathFingerprints.add(puzzle.pathFingerprint);
+    usedVisibleFingerprints.add(puzzle.visibleFingerprint);
   }
   return puzzles;
 }
@@ -777,7 +821,7 @@ function buildPuzzle(seed, gameIndex, settings) {
   const rng = createRng(seed);
   const path = generateHamiltonianPath(settings.width, settings.height, settings.mode, rng);
   return {
-    title: "Checkpoint Trail",
+    title: t("sheetTitle"),
     instructions: settings.instructions,
     width: settings.width,
     height: settings.height,
@@ -786,11 +830,70 @@ function buildPuzzle(seed, gameIndex, settings) {
     checkpoints: selectCheckpoints(path, settings.checkpoints),
     solutionPath: path,
     seed,
+    pathFingerprint: "",
+    visibleFingerprint: "",
   };
 }
 
 function deriveGameSeed(bundle, gameIndex) {
   return BigInt(gameIndex) * BUNDLE_BASE + bundle;
+}
+
+function deriveCandidateSeed(bundle, gameIndex, candidateIndex) {
+  return bundle + BigInt(gameIndex) * BUNDLE_BASE + BigInt(candidateIndex) * 1000003n;
+}
+
+function buildDiversePuzzle(bundle, gameIndex, settings, existingPuzzles, usedPathFingerprints, usedVisibleFingerprints) {
+  const candidateCount = candidateBatchSize(settings.width, settings.height);
+  let bestPuzzle = null;
+  let bestScore = -Infinity;
+
+  for (let candidateIndex = 0; candidateIndex < candidateCount; candidateIndex += 1) {
+    const seed = deriveCandidateSeed(bundle, gameIndex, candidateIndex);
+    const puzzle = buildPuzzle(seed, gameIndex, settings);
+    puzzle.pathFingerprint = canonicalPathFingerprint(puzzle.solutionPath, puzzle.width, puzzle.height, puzzle.mode);
+    puzzle.visibleFingerprint = canonicalCheckpointFingerprint(
+      puzzle.checkpoints,
+      puzzle.width,
+      puzzle.height,
+      puzzle.mode,
+    );
+
+    const exactPathDuplicate = usedPathFingerprints.has(puzzle.pathFingerprint);
+    const exactVisibleDuplicate = usedVisibleFingerprints.has(puzzle.visibleFingerprint);
+    const diversity = existingPuzzles.length === 0
+      ? 1000
+      : Math.min(...existingPuzzles.map((other) => puzzleDistance(puzzle, other)));
+    const noveltyBonus = exactPathDuplicate ? -5000 : 0;
+    const visibleBonus = exactVisibleDuplicate ? -2500 : 400;
+    const score = modeScore(puzzle.solutionPath, puzzle.mode) + diversity * 8 + noveltyBonus + visibleBonus;
+
+    if (score > bestScore) {
+      bestPuzzle = puzzle;
+      bestScore = score;
+    }
+
+    if (!exactPathDuplicate && !exactVisibleDuplicate && diversity >= 12) {
+      bestPuzzle = puzzle;
+      break;
+    }
+  }
+
+  return bestPuzzle;
+}
+
+function candidateBatchSize(width, height) {
+  const area = width * height;
+  if (area <= 16) {
+    return 96;
+  }
+  if (area <= 36) {
+    return 56;
+  }
+  if (area <= 64) {
+    return 32;
+  }
+  return 20;
 }
 
 function defaultBundle(date = new Date()) {
@@ -970,6 +1073,77 @@ function modeScore(path, mode) {
     : score + (matchesMode(path, mode) ? 1000 : -1000);
 }
 
+function puzzleDistance(first, second) {
+  const checkpointCount = Math.min(first.checkpoints.length, second.checkpoints.length);
+  let checkpointDistance = 0;
+  for (let index = 0; index < checkpointCount; index += 1) {
+    checkpointDistance += manhattan(first.checkpoints[index], second.checkpoints[index]);
+  }
+  const endpointDistance =
+    manhattan(first.solutionPath[0], second.solutionPath[0]) +
+    manhattan(first.solutionPath[first.solutionPath.length - 1], second.solutionPath[second.solutionPath.length - 1]);
+  const turnDistance = Math.abs(pathScore(first.solutionPath) - pathScore(second.solutionPath));
+  return checkpointDistance + endpointDistance * 2 + turnDistance;
+}
+
+function manhattan(first, second) {
+  return Math.abs(first.row - second.row) + Math.abs(first.col - second.col);
+}
+
+function canonicalPathFingerprint(path, width, height, mode) {
+  return canonicalFingerprint(path, width, height, mode);
+}
+
+function canonicalCheckpointFingerprint(checkpoints, width, height, mode) {
+  return canonicalFingerprint(checkpoints, width, height, mode);
+}
+
+function canonicalFingerprint(points, width, height, mode) {
+  const transforms = symmetryTransforms(width, height);
+  const variants = [];
+  for (const transformId of transforms) {
+    const transformed = points.map((point) => transformPoint(point, width, height, transformId));
+    variants.push(serializePoints(transformed, mode));
+    variants.push(serializePoints(transformed.slice().reverse(), mode));
+  }
+  variants.sort();
+  return variants[0];
+}
+
+function serializePoints(points, mode) {
+  return `${mode}|${points.map((point) => `${point.row},${point.col}`).join(";")}`;
+}
+
+function symmetryTransforms(width, height) {
+  if (width === height) {
+    return [0, 1, 2, 3, 4, 5, 6, 7];
+  }
+  return [0, 2, 4, 5];
+}
+
+function transformPoint(point, width, height, transformId) {
+  switch (transformId) {
+    case 0:
+      return { row: point.row, col: point.col };
+    case 1:
+      return { row: point.col, col: width - 1 - point.row };
+    case 2:
+      return { row: height - 1 - point.row, col: width - 1 - point.col };
+    case 3:
+      return { row: height - 1 - point.col, col: point.row };
+    case 4:
+      return { row: point.row, col: width - 1 - point.col };
+    case 5:
+      return { row: height - 1 - point.row, col: point.col };
+    case 6:
+      return { row: point.col, col: point.row };
+    case 7:
+      return { row: height - 1 - point.col, col: width - 1 - point.row };
+    default:
+      return { row: point.row, col: point.col };
+  }
+}
+
 function selectCheckpoints(path, checkpointCount) {
   const checkpoints = [];
   const lastIndex = path.length - 1;
@@ -982,9 +1156,15 @@ function selectCheckpoints(path, checkpointCount) {
 
 function instructionsForMode(mode, checkpointCount) {
   if (mode === "circuit") {
-    return `Draw one closed circuit through every square exactly once. Follow checkpoints 1 to ${checkpointCount} in order. Checkpoint 1 and checkpoint ${checkpointCount} sit next to each other because the circuit closes there.`;
+    return t("instructionsCircuit", { checkpoints: checkpointCount, checkpointTerm: checkpointTerm() });
   }
-  return `Draw one non-closed path through every square exactly once. Follow checkpoints 1 to ${checkpointCount} in order. Checkpoint 1 begins the path and checkpoint ${checkpointCount} ends it.`;
+  return t("instructionsPath", { checkpoints: checkpointCount, checkpointTerm: checkpointTerm() });
+}
+
+function checkpointTerm() {
+  // Optional helper only. Locales can ignore this entirely and phrase copy
+  // around numbers, markers, or other child-friendly concepts instead.
+  return (MESSAGES[currentLocale] && MESSAGES[currentLocale].checkpointTerm) || MESSAGES.en.checkpointTerm;
 }
 
 function renderPages(puzzles, settings) {
@@ -1002,22 +1182,22 @@ function renderPages(puzzles, settings) {
 
 function renderSheet(puzzles, settings, pageIndex, showSolution) {
   const [columns, rows] = pageGridDimensions(settings.pack);
-  const heading = showSolution ? "Solutions" : "Checkpoint Trail";
-  const subtitle = showSolution ? "" : `${settings.instructions} Board: ${settings.width} x ${settings.height}.`;
+  const heading = showSolution ? t("solutions") : t("sheetTitle");
+  const subtitle = showSolution ? "" : `${settings.instructions} ${t("boardLabel", { width: settings.width, height: settings.height })}`;
   const cards = puzzles
     .map((puzzle) => renderPuzzleCard(puzzle, showSolution, columns, rows))
     .join("");
   const legend = showSolution
     ? ""
-    : `<div class="legend"><div class="legend-card"><strong>How to solve</strong>Draw lines up, down, left, or right only.</div><div class="legend-card"><strong>Remember</strong>Visit all ${settings.width * settings.height} squares once and keep the checkpoints in order.</div></div>`;
+    : `<div class="legend"><div class="legend-card"><strong>${escapeHtml(t("howToSolve"))}</strong>${escapeHtml(t("howToSolveBody"))}</div><div class="legend-card"><strong>${escapeHtml(t("remember"))}</strong>${escapeHtml(t("rememberBody", { cells: settings.width * settings.height, checkpoints: settings.checkpoints, checkpointTerm: checkpointTerm() }))}</div></div>`;
 
   return `
     <section class="sheet">
       <header class="sheet-header">
-        <p class="kicker">${showSolution ? "Solution Sheets" : "A Hamiltonian path puzzle"}</p>
+        <p class="kicker">${showSolution ? escapeHtml(t("solutionSheets")) : escapeHtml(t("sheetKicker"))}</p>
         <div class="sheet-title-row">
           <h3>${escapeHtml(heading)}</h3>
-          <p class="sheet-pack">bundle ${settings.bundleText} / page ${pageIndex + 1}</p>
+          <p class="sheet-pack">${escapeHtml(t("bundlePage", { bundle: settings.bundleText, page: pageIndex + 1 }))}</p>
         </div>
       </header>
       ${subtitle ? `<p class="sheet-subtitle">${escapeHtml(subtitle)}</p>` : ""}
@@ -1035,7 +1215,7 @@ function renderPuzzleCard(puzzle, showSolution, columns, rows) {
   const cell = cellSizeMm(puzzle.width, puzzle.height, columns, rows, showSolution);
   return `
     <article class="puzzle-card">
-      <h4 class="puzzle-title">Game ${puzzle.gameIndex + 1}</h4>
+      <h4 class="puzzle-title">${escapeHtml(t("gameTitle", { game: puzzle.gameIndex + 1 }))}</h4>
       ${renderBoard(puzzle, showSolution, cell)}
     </article>
   `;
@@ -1167,12 +1347,693 @@ function renderPathSvg(puzzle, showSolution) {
 
 function renderError(message) {
   const fragment = errorTemplate.content.cloneNode(true);
+  fragment.querySelector("[data-i18n='cannotGenerate']").textContent = t("cannotGenerate");
   fragment.querySelector("#error-message").textContent = message;
   pagesRoot.innerHTML = "";
   pagesRoot.append(fragment);
-  statusMain.textContent = "Invalid settings";
+  statusMain.textContent = t("invalidSettings");
   statusSub.textContent = message;
 }
+
+function applyStaticTranslations() {
+  document.documentElement.lang = currentLocale;
+  document.documentElement.dir = currentLocale === "ar" || currentLocale === "fa" ? "rtl" : "ltr";
+  document.title = t("appTitle");
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const key = element.dataset.i18n;
+    if (element.tagName === "OPTION") {
+      element.textContent = t(key);
+      return;
+    }
+    element.textContent = t(key);
+  });
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    element.setAttribute("aria-label", t(element.dataset.i18nAriaLabel));
+  });
+}
+
+function resolveLocale() {
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get("lang");
+  const candidates = requested ? [requested] : (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language]);
+  for (const rawCandidate of candidates) {
+    const candidate = String(rawCandidate || "").trim();
+    if (!candidate) {
+      continue;
+    }
+    if (MESSAGES[candidate]) {
+      return candidate;
+    }
+    const base = candidate.split("-")[0];
+    if (MESSAGES[base]) {
+      return base;
+    }
+  }
+  return "en";
+}
+
+function t(key, vars = {}) {
+  const template = (MESSAGES[currentLocale] && MESSAGES[currentLocale][key]) || MESSAGES.en[key] || key;
+  return template.replace(/\{(\w+)\}/g, (_, name) => String(vars[name] ?? `{${name}}`));
+}
+
+function tPlural(key, count, vars = {}) {
+  const variant = count === 1 ? `${key}One` : `${key}Other`;
+  return t(variant, vars);
+}
+
+const MESSAGES = {
+  en: {
+    appTitle: "Checkpoint Trail",
+    appLead: "Create printable trail puzzles right in your browser.",
+    bundleSection: "Bundle",
+    bundleId: "Bundle ID",
+    useCurrentTime: "Use Current Time",
+    boardSection: "Board",
+    square: "Square",
+    rectangle: "Rectangle",
+    size: "Size",
+    width: "Width",
+    height: "Height",
+    checkpoints: "Checkpoints",
+    checkpointTerm: "checkpoint",
+    mode: "Mode",
+    path: "Path",
+    circuit: "Circuit",
+    sheetsSection: "Sheets",
+    games: "Games",
+    packPerPage: "Games Per Page",
+    generateSheets: "Generate Sheets",
+    print: "Print",
+    currentSet: "Print Summary",
+    language: "Language",
+    livePreview: "Preview",
+    printablePages: "Printable Pages",
+    previewNote: "Use your browser print dialog for final output.",
+    cannotGenerate: "Could not create pages",
+    invalidSettings: "Check the settings",
+    gamesReadyOne: "1 puzzle ready",
+    gamesReadyOther: "{count} puzzles ready",
+    pagesSummaryOne: "{pack} per page, {count} page total",
+    pagesSummaryOther: "{pack} per page, {count} pages total",
+    sheetTitle: "Checkpoint Trail",
+    solutions: "Solutions",
+    sheetKicker: "A Hamiltonian path puzzle",
+    solutionSheets: "Solution Sheets",
+    bundlePage: "bundle {bundle} / page {page}",
+    boardLabel: "Board: {width} × {height}.",
+    gameTitle: "Puzzle {game}",
+    howToSolve: "How to solve",
+    howToSolveBody: "Draw lines up, down, left, or right only.",
+    remember: "Remember",
+    rememberBody: "Use all {cells} squares exactly once and follow the {checkpointTerm}s in order.",
+    instructionsPath:
+      "Draw one open path through every square exactly once. Follow {checkpointTerm}s 1 to {checkpoints} in order. {checkpointTerm} 1 begins the path and {checkpointTerm} {checkpoints} ends it.",
+    instructionsCircuit:
+      "Draw one closed loop through every square exactly once. Follow {checkpointTerm}s 1 to {checkpoints} in order. {checkpointTerm} 1 and {checkpointTerm} {checkpoints} sit next to each other because the loop closes there.",
+    errorBundleDigits: "Bundle must contain digits only.",
+    errorBundleRange: "Bundle must be smaller than 10^12.",
+    errorBoardMin: "Board dimensions must both be at least 2.",
+    errorBoardArea: "Board area must stay at or below {limit} cells.",
+    errorCircuitEven: "Circuit mode needs an even number of cells.",
+    errorCheckpointsFit: "Checkpoints must fit within the board.",
+    errorGamesPackMin: "Games and pack must both be at least 1.",
+    errorWholeNumber: "{label} must be a whole number.",
+  },
+  zh: {
+    appTitle: "方格寻踪",
+    appLead: "在浏览器中生成可打印的方格寻踪题。",
+    bundleSection: "套组",
+    bundleId: "套组编号",
+    useCurrentTime: "使用当前时间",
+    boardSection: "棋盘",
+    square: "正方形",
+    rectangle: "长方形",
+    size: "尺寸",
+    width: "宽度",
+    height: "高度",
+    checkpoints: "编号",
+    checkpointTerm: "编号",
+    mode: "线的样子",
+    path: "一条线",
+    circuit: "绕一圈",
+    sheetsSection: "页面",
+    games: "题目数",
+    packPerPage: "每页题目数",
+    generateSheets: "生成页面",
+    print: "打印",
+    currentSet: "打印摘要",
+    language: "语言",
+    livePreview: "预览",
+    printablePages: "可打印页面",
+    previewNote: "最终输出请使用浏览器打印对话框。",
+    cannotGenerate: "无法生成页面",
+    invalidSettings: "设置无效",
+    gamesReadyOne: "已准备 {count} 道题",
+    gamesReadyOther: "已准备 {count} 道题",
+    pagesSummaryOne: "每页 {pack} 道题，共 {count} 页",
+    pagesSummaryOther: "每页 {pack} 道题，共 {count} 页",
+    sheetTitle: "方格寻踪",
+    solutions: "答案",
+    sheetKicker: "哈密顿路径练习",
+    solutionSheets: "答案页",
+    bundlePage: "套组 {bundle} / 第 {page} 页",
+    boardLabel: "棋盘：{width} × {height}。",
+    gameTitle: "第 {game} 题",
+    howToSolve: "玩法",
+    howToSolveBody: "只能向上、下、左、右连线。",
+    remember: "记住",
+    rememberBody: "把 {cells} 个方格全部走过，而且每个方格只能走一次，并按顺序连到这些编号。",
+    instructionsPath:
+      "画一条线，把每个方格都正好经过一次，再按顺序连到 1 到 {checkpoints}。1 是起点，{checkpoints} 是终点。",
+    instructionsCircuit:
+      "画一圈线，把每个方格都正好经过一次，再按顺序连到 1 到 {checkpoints}。1 和 {checkpoints} 相邻，因为线会在那里连成一圈。",
+    errorBundleDigits: "套组编号只能包含数字。",
+    errorBundleRange: "套组编号必须小于 10^12。",
+    errorBoardMin: "棋盘的宽和高都必须至少为 2。",
+    errorBoardArea: "棋盘总格数必须不超过 {limit}。",
+    errorCircuitEven: "绕一圈时需要偶数个格子。",
+    errorCheckpointsFit: "编号数量必须放得进棋盘。",
+    errorGamesPackMin: "题目数和每页题目数都必须至少为 1。",
+    errorWholeNumber: "{label} 必须是整数。",
+  },
+  hi: {
+    appTitle: "रास्ता खोज",
+    appLead: "ब्राउज़र में छापने योग्य रास्ता-पहेलियाँ बनाइए।",
+    bundleSection: "बंडल",
+    bundleId: "बंडल आईडी",
+    useCurrentTime: "वर्तमान समय लें",
+    boardSection: "बोर्ड",
+    square: "वर्ग",
+    rectangle: "आयत",
+    size: "आकार",
+    width: "चौड़ाई",
+    height: "ऊँचाई",
+    checkpoints: "नंबर",
+    checkpointTerm: "नंबर",
+    mode: "रास्ते का ढंग",
+    path: "एक रास्ता",
+    circuit: "एक घेरा",
+    sheetsSection: "शीट",
+    games: "खेल",
+    packPerPage: "प्रति पृष्ठ",
+    generateSheets: "शीट बनाएं",
+    print: "प्रिंट",
+    currentSet: "प्रिंट सारांश",
+    language: "भाषा",
+    livePreview: "पूर्वावलोकन",
+    printablePages: "प्रिंट योग्य पृष्ठ",
+    previewNote: "अंतिम आउटपुट के लिए ब्राउज़र प्रिंट संवाद का उपयोग करें।",
+    cannotGenerate: "शीट नहीं बनाई जा सकीं",
+    invalidSettings: "अमान्य सेटिंग",
+    gamesReadyOne: "1 पहेली तैयार",
+    gamesReadyOther: "{count} पहेलियाँ तैयार",
+    pagesSummaryOne: "प्रति पृष्ठ {pack}, कुल {count} प्रिंट पृष्ठ",
+    pagesSummaryOther: "प्रति पृष्ठ {pack}, कुल {count} प्रिंट पृष्ठ",
+    sheetTitle: "रास्ता खोज",
+    solutions: "समाधान",
+    sheetKicker: "एक हैमिल्टन पथ पहेली",
+    solutionSheets: "समाधान पृष्ठ",
+    bundlePage: "बंडल {bundle} / पृष्ठ {page}",
+    boardLabel: "बोर्ड: {width} × {height}.",
+    gameTitle: "पहेली {game}",
+    howToSolve: "कैसे हल करें",
+    howToSolveBody: "रेखा केवल ऊपर, नीचे, बाएँ या दाएँ खींचें।",
+    remember: "याद रखें",
+    rememberBody: "सभी {cells} खानों से केवल एक बार गुजरें और नंबर क्रम से लें।",
+    instructionsPath:
+      "ऐसा एक रास्ता बनाइए जो हर खाने से केवल एक बार गुज़रे। 1 से {checkpoints} तक के नंबर क्रम से लेते जाएँ। 1 शुरुआत है और {checkpoints} अंत है।",
+    instructionsCircuit:
+      "ऐसा एक घेरा बनाइए जो हर खाने से केवल एक बार गुज़रे। 1 से {checkpoints} तक के नंबर क्रम से लेते जाएँ। 1 और {checkpoints} पास-पास हैं क्योंकि घेरा वहीं बंद होता है।",
+    errorBundleDigits: "बंडल में केवल अंक होने चाहिए।",
+    errorBundleRange: "बंडल 10^12 से छोटा होना चाहिए।",
+    errorBoardMin: "बोर्ड की चौड़ाई और ऊँचाई दोनों कम से कम 2 होनी चाहिए।",
+    errorBoardArea: "बोर्ड का क्षेत्रफल {limit} खाने या उससे कम होना चाहिए।",
+    errorCircuitEven: "एक घेरे के लिए खाने की संख्या सम होनी चाहिए।",
+    errorCheckpointsFit: "नंबर बोर्ड में समाने चाहिए।",
+    errorGamesPackMin: "खेल और प्रति पृष्ठ संख्या दोनों कम से कम 1 हों।",
+    errorWholeNumber: "{label} पूर्ण संख्या होनी चाहिए।",
+  },
+  ar: {
+    appTitle: "درب المربعات",
+    appLead: "أنشئ ألغاز مسار قابلة للطباعة مباشرة في المتصفح.",
+    bundleSection: "الحزمة",
+    bundleId: "معرّف الحزمة",
+    useCurrentTime: "استخدم الوقت الحالي",
+    boardSection: "اللوحة",
+    square: "مربع",
+    rectangle: "مستطيل",
+    size: "الحجم",
+    width: "العرض",
+    height: "الارتفاع",
+    checkpoints: "الأرقام",
+    checkpointTerm: "رقم",
+    mode: "شكل الخط",
+    path: "خط واحد",
+    circuit: "دورة واحدة",
+    sheetsSection: "الصفحات",
+    games: "الألعاب",
+    packPerPage: "لكل صفحة",
+    generateSheets: "إنشاء الصفحات",
+    print: "طباعة",
+    currentSet: "ملخص الطباعة",
+    language: "اللغة",
+    livePreview: "معاينة",
+    printablePages: "صفحات قابلة للطباعة",
+    previewNote: "استخدم نافذة الطباعة في المتصفح للإخراج النهائي.",
+    cannotGenerate: "تعذر إنشاء الصفحات",
+    invalidSettings: "إعدادات غير صالحة",
+    gamesReadyOne: "لعبة واحدة جاهزة",
+    gamesReadyOther: "{count} ألعاب جاهزة",
+    pagesSummaryOne: "{pack} لكل صفحة، صفحة واحدة للطباعة",
+    pagesSummaryOther: "{pack} لكل صفحة، {count} صفحات للطباعة",
+    sheetTitle: "درب المربعات",
+    solutions: "الحلول",
+    sheetKicker: "لغز مسار هاملتوني",
+    solutionSheets: "صفحات الحلول",
+    bundlePage: "الحزمة {bundle} / الصفحة {page}",
+    boardLabel: "اللوحة: {width} × {height}.",
+    gameTitle: "اللغز {game}",
+    howToSolve: "طريقة الحل",
+    howToSolveBody: "ارسم الخطوط إلى الأعلى أو الأسفل أو اليسار أو اليمين فقط.",
+    remember: "تذكّر",
+    rememberBody: "مرّ بجميع المربعات وعددها {cells} مرة واحدة فقط، واتبع الأرقام بالترتيب.",
+    instructionsPath:
+      "ارسم خطًا واحدًا مفتوحًا يمر بكل مربع مرة واحدة فقط. اتبع الأرقام من 1 إلى {checkpoints} بالترتيب. الرقم 1 هو البداية والرقم {checkpoints} هو النهاية.",
+    instructionsCircuit:
+      "ارسم دورة واحدة مغلقة تمر بكل مربع مرة واحدة فقط. اتبع الأرقام من 1 إلى {checkpoints} بالترتيب. الرقم 1 والرقم {checkpoints} متجاوران لأن الدورة تُغلق هناك.",
+    errorBundleDigits: "يجب أن يحتوي رقم الحزمة على أرقام فقط.",
+    errorBundleRange: "يجب أن يكون رقم الحزمة أصغر من 10^12.",
+    errorBoardMin: "يجب أن يكون كل من عرض اللوحة وارتفاعها 2 على الأقل.",
+    errorBoardArea: "يجب ألا تتجاوز مساحة اللوحة {limit} خلية.",
+    errorCircuitEven: "الدورة الواحدة تحتاج إلى عدد زوجي من الخلايا.",
+    errorCheckpointsFit: "يجب أن يتسع عدد الأرقام داخل اللوحة.",
+    errorGamesPackMin: "يجب أن يكون عدد الألعاب وعددها في الصفحة 1 على الأقل.",
+    errorWholeNumber: "يجب أن تكون قيمة {label} عددًا صحيحًا.",
+  },
+  id: {
+    appTitle: "Jejak Kotak",
+    appLead: "Buat puzzle jalur yang siap dicetak langsung di browser.",
+    bundleSection: "Bundel",
+    bundleId: "ID Bundel",
+    useCurrentTime: "Gunakan Waktu Saat Ini",
+    boardSection: "Papan",
+    square: "Persegi",
+    rectangle: "Persegi Panjang",
+    size: "Ukuran",
+    width: "Lebar",
+    height: "Tinggi",
+    checkpoints: "Nomor",
+    checkpointTerm: "nomor",
+    mode: "Bentuk Jalur",
+    path: "Jalur Terbuka",
+    circuit: "Satu Putaran",
+    sheetsSection: "Lembar",
+    games: "Permainan",
+    packPerPage: "Per Halaman",
+    generateSheets: "Buat Lembar",
+    print: "Cetak",
+    currentSet: "Ringkasan Cetak",
+    language: "Bahasa",
+    livePreview: "Pratinjau",
+    printablePages: "Halaman Siap Cetak",
+    previewNote: "Gunakan dialog cetak browser untuk hasil akhir.",
+    cannotGenerate: "Tidak dapat membuat lembar",
+    invalidSettings: "Pengaturan tidak valid",
+    gamesReadyOne: "{count} permainan siap",
+    gamesReadyOther: "{count} permainan siap",
+    pagesSummaryOne: "{pack} per halaman, {count} halaman cetak",
+    pagesSummaryOther: "{pack} per halaman, {count} halaman cetak",
+    sheetTitle: "Jejak Kotak",
+    solutions: "Solusi",
+    sheetKicker: "Puzzle jalur Hamilton",
+    solutionSheets: "Halaman Solusi",
+    bundlePage: "bundel {bundle} / halaman {page}",
+    boardLabel: "Papan: {width} × {height}.",
+    gameTitle: "Puzzle {game}",
+    howToSolve: "Cara mengerjakan",
+    howToSolveBody: "Gambar garis hanya ke atas, bawah, kiri, atau kanan.",
+    remember: "Ingat",
+    rememberBody: "Lewati semua {cells} kotak tepat satu kali dan ikuti nomor sesuai urutan.",
+    instructionsPath:
+      "Gambar satu jalur terbuka yang melewati setiap kotak tepat satu kali. Ikuti nomor 1 sampai {checkpoints} secara berurutan. Nomor 1 adalah awal dan nomor {checkpoints} adalah akhir.",
+    instructionsCircuit:
+      "Gambar satu putaran yang melewati setiap kotak tepat satu kali. Ikuti nomor 1 sampai {checkpoints} secara berurutan. Nomor 1 dan nomor {checkpoints} berdampingan karena putarannya menutup di sana.",
+    errorBundleDigits: "Bundel hanya boleh berisi angka.",
+    errorBundleRange: "Bundel harus lebih kecil dari 10^12.",
+    errorBoardMin: "Lebar dan tinggi papan harus minimal 2.",
+    errorBoardArea: "Luas papan harus {limit} kotak atau kurang.",
+    errorCircuitEven: "Satu putaran membutuhkan jumlah kotak genap.",
+    errorCheckpointsFit: "Jumlah nomor harus muat di papan.",
+    errorGamesPackMin: "Jumlah permainan dan jumlah per halaman minimal 1.",
+    errorWholeNumber: "{label} harus berupa bilangan bulat.",
+  },
+  ja: {
+    appTitle: "マスめぐりパズル",
+    appLead: "ブラウザーで印刷用のマスめぐりパズルを作れます。",
+    bundleSection: "バンドル",
+    bundleId: "バンドルID",
+    useCurrentTime: "現在時刻を使う",
+    boardSection: "盤面",
+    square: "正方形",
+    rectangle: "長方形",
+    size: "サイズ",
+    width: "幅",
+    height: "高さ",
+    checkpoints: "丸数字",
+    checkpointTerm: "丸数字",
+    mode: "道のかたち",
+    path: "一本道",
+    circuit: "ひとまわり",
+    sheetsSection: "シート",
+    games: "問題数",
+    packPerPage: "1ページの問題数",
+    generateSheets: "ページを作る",
+    print: "印刷",
+    currentSet: "印刷の概要",
+    language: "言語",
+    livePreview: "プレビュー",
+    printablePages: "印刷用ページ",
+    previewNote: "仕上げはブラウザーの印刷ダイアログを使ってください。",
+    cannotGenerate: "ページを作成できません",
+    invalidSettings: "設定を見直してください",
+    gamesReadyOne: "{count}問できました",
+    gamesReadyOther: "{count}問できました",
+    pagesSummaryOne: "1ページに{pack}問、印刷ページは{count}枚",
+    pagesSummaryOther: "1ページに{pack}問、印刷ページは{count}枚",
+    sheetTitle: "マスめぐりパズル",
+    solutions: "解答",
+    sheetKicker: "ハミルトン経路パズル",
+    solutionSheets: "解答ページ",
+    bundlePage: "バンドル {bundle} / ページ {page}",
+    boardLabel: "盤面: {width} × {height}。",
+    gameTitle: "パズル {game}",
+    howToSolve: "遊び方",
+    howToSolveBody: "線は上・下・左・右にだけ引けます。",
+    remember: "ポイント",
+    rememberBody: "{cells}マスすべてを一度ずつ通り、丸数字を順番にたどってください。",
+    instructionsPath:
+      "すべてのマスを一度ずつ通る一本道を1本描きましょう。1から{checkpoints}までの丸数字を順番に通ります。1がスタートで、{checkpoints}がゴールです。",
+    instructionsCircuit:
+      "すべてのマスを一度ずつ通るひとまわりの道を1本描きましょう。1から{checkpoints}までの丸数字を順番に通ります。1と{checkpoints}は道がそこでつながるので隣り合っています。",
+    errorBundleDigits: "バンドルIDは数字のみで入力してください。",
+    errorBundleRange: "バンドルIDは 10^12 未満である必要があります。",
+    errorBoardMin: "盤面の幅と高さはどちらも 2 以上である必要があります。",
+    errorBoardArea: "盤面のマス数は {limit} 以下にしてください。",
+    errorCircuitEven: "ひとまわりの道ではマス数が偶数である必要があります。",
+    errorCheckpointsFit: "丸数字の数は盤面に収まる必要があります。",
+    errorGamesPackMin: "問題数と1ページの問題数はどちらも 1 以上にしてください。",
+    errorWholeNumber: "{label} は整数で入力してください。",
+  },
+  tr: {
+    appTitle: "Kare Rotası",
+    appLead: "Tarayıcıda yazdırılabilir kare rota bulmacaları oluşturun.",
+    bundleSection: "Paket",
+    bundleId: "Paket Kimliği",
+    useCurrentTime: "Geçerli Saati Kullan",
+    boardSection: "Tahta",
+    square: "Kare",
+    rectangle: "Dikdörtgen",
+    size: "Boyut",
+    width: "Genişlik",
+    height: "Yükseklik",
+    checkpoints: "Numaralar",
+    checkpointTerm: "numara",
+    mode: "Yolun Şekli",
+    path: "Tek Yol",
+    circuit: "Bir Tur",
+    sheetsSection: "Sayfalar",
+    games: "Oyunlar",
+    packPerPage: "Sayfa Başına",
+    generateSheets: "Sayfaları Oluştur",
+    print: "Yazdır",
+    currentSet: "Yazdırma Özeti",
+    language: "Dil",
+    livePreview: "Önizleme",
+    printablePages: "Yazdırılabilir Sayfalar",
+    previewNote: "Son çıktı için tarayıcı yazdırma penceresini kullanın.",
+    cannotGenerate: "Sayfalar oluşturulamadı",
+    invalidSettings: "Geçersiz ayarlar",
+    gamesReadyOne: "{count} oyun hazır",
+    gamesReadyOther: "{count} oyun hazır",
+    pagesSummaryOne: "Sayfa başına {pack}, {count} yazdırılabilir sayfa",
+    pagesSummaryOther: "Sayfa başına {pack}, {count} yazdırılabilir sayfa",
+    sheetTitle: "Kare Rotası",
+    solutions: "Çözümler",
+    sheetKicker: "Bir Hamilton yol bulmacası",
+    solutionSheets: "Çözüm Sayfaları",
+    bundlePage: "paket {bundle} / sayfa {page}",
+    boardLabel: "Tahta: {width} × {height}.",
+    gameTitle: "Bulmaca {game}",
+    howToSolve: "Nasıl çözülür",
+    howToSolveBody: "Çizgileri yalnızca yukarı, aşağı, sola veya sağa çizin.",
+    remember: "Unutma",
+    rememberBody: "Tüm {cells} kareyi yalnızca bir kez ziyaret et ve numaraları sırayla takip et.",
+    instructionsPath:
+      "Her kareden yalnızca bir kez geçen tek bir yol çiz. 1'den {checkpoints}'e kadar numaraları sırayla izle. Numara 1 başlangıçtır, numara {checkpoints} bitiştir.",
+    instructionsCircuit:
+      "Her kareden yalnızca bir kez geçen bir tur çiz. 1'den {checkpoints}'e kadar numaraları sırayla izle. Numara 1 ve numara {checkpoints} yan yanadır çünkü tur orada kapanır.",
+    errorBundleDigits: "Paket yalnızca rakamlardan oluşmalıdır.",
+    errorBundleRange: "Paket 10^12 değerinden küçük olmalıdır.",
+    errorBoardMin: "Tahta genişliği ve yüksekliği en az 2 olmalıdır.",
+    errorBoardArea: "Tahta alanı en fazla {limit} hücre olmalıdır.",
+    errorCircuitEven: "Bir tur için hücre sayısı çift olmalıdır.",
+    errorCheckpointsFit: "Numara sayısı tahtaya sığmalıdır.",
+    errorGamesPackMin: "Oyun sayısı ve sayfa başına sayı en az 1 olmalıdır.",
+    errorWholeNumber: "{label} tam sayı olmalıdır.",
+  },
+  vi: {
+    appTitle: "Hành Trình Ô Vuông",
+    appLead: "Tạo các bài đố đường đi có thể in ngay trong trình duyệt.",
+    bundleSection: "Gói",
+    bundleId: "Mã Gói",
+    useCurrentTime: "Dùng Thời Gian Hiện Tại",
+    boardSection: "Bảng",
+    square: "Hình vuông",
+    rectangle: "Hình chữ nhật",
+    size: "Kích thước",
+    width: "Chiều rộng",
+    height: "Chiều cao",
+    checkpoints: "Các số",
+    checkpointTerm: "số",
+    mode: "Kiểu đường",
+    path: "Một đường",
+    circuit: "Một vòng",
+    sheetsSection: "Trang",
+    games: "Trò chơi",
+    packPerPage: "Mỗi trang",
+    generateSheets: "Tạo Trang",
+    print: "In",
+    currentSet: "Tóm tắt in",
+    language: "Ngôn ngữ",
+    livePreview: "Xem trước",
+    printablePages: "Trang có thể in",
+    previewNote: "Hãy dùng hộp thoại in của trình duyệt để in thật.",
+    cannotGenerate: "Không thể tạo trang",
+    invalidSettings: "Thiết lập không hợp lệ",
+    gamesReadyOne: "{count} trò chơi sẵn sàng",
+    gamesReadyOther: "{count} trò chơi sẵn sàng",
+    pagesSummaryOne: "{pack} mỗi trang, {count} trang in",
+    pagesSummaryOther: "{pack} mỗi trang, {count} trang in",
+    sheetTitle: "Hành Trình Ô Vuông",
+    solutions: "Lời giải",
+    sheetKicker: "Một câu đố đường Hamilton",
+    solutionSheets: "Trang lời giải",
+    bundlePage: "gói {bundle} / trang {page}",
+    boardLabel: "Bảng: {width} × {height}.",
+    gameTitle: "Bài {game}",
+    howToSolve: "Cách chơi",
+    howToSolveBody: "Chỉ vẽ đường lên, xuống, trái hoặc phải.",
+    remember: "Ghi nhớ",
+    rememberBody: "Đi qua tất cả {cells} ô đúng một lần và theo các số đúng thứ tự.",
+    instructionsPath:
+      "Vẽ một đường đi qua mỗi ô đúng một lần. Đi theo các số từ 1 đến {checkpoints}. Số 1 là điểm bắt đầu và số {checkpoints} là điểm kết thúc.",
+    instructionsCircuit:
+      "Vẽ một vòng đi qua mỗi ô đúng một lần. Đi theo các số từ 1 đến {checkpoints}. Số 1 và số {checkpoints} nằm cạnh nhau vì vòng sẽ khép lại ở đó.",
+    errorBundleDigits: "Mã gói chỉ được chứa chữ số.",
+    errorBundleRange: "Mã gói phải nhỏ hơn 10^12.",
+    errorBoardMin: "Chiều rộng và chiều cao của bảng đều phải ít nhất là 2.",
+    errorBoardArea: "Diện tích bảng phải nhỏ hơn hoặc bằng {limit} ô.",
+    errorCircuitEven: "Một vòng cần số ô chẵn.",
+    errorCheckpointsFit: "Số lượng số đánh dấu phải phù hợp với bảng.",
+    errorGamesPackMin: "Số trò chơi và số mỗi trang đều phải ít nhất là 1.",
+    errorWholeNumber: "{label} phải là số nguyên.",
+  },
+  ko: {
+    appTitle: "칸 길찾기",
+    appLead: "브라우저에서 바로 인쇄용 칸 길찾기 퍼즐을 만드세요.",
+    bundleSection: "번들",
+    bundleId: "번들 ID",
+    useCurrentTime: "현재 시간 사용",
+    boardSection: "보드",
+    square: "정사각형",
+    rectangle: "직사각형",
+    size: "크기",
+    width: "가로",
+    height: "세로",
+    checkpoints: "숫자 표시",
+    checkpointTerm: "숫자",
+    mode: "길 모양",
+    path: "한 줄 길",
+    circuit: "한 바퀴 길",
+    sheetsSection: "시트",
+    games: "게임 수",
+    packPerPage: "페이지당",
+    generateSheets: "시트 만들기",
+    print: "인쇄",
+    currentSet: "인쇄 요약",
+    language: "언어",
+    livePreview: "미리보기",
+    printablePages: "인쇄용 페이지",
+    previewNote: "최종 출력은 브라우저 인쇄 대화상자를 사용하세요.",
+    cannotGenerate: "시트를 만들 수 없습니다",
+    invalidSettings: "잘못된 설정",
+    gamesReadyOne: "{count}개 게임 준비됨",
+    gamesReadyOther: "{count}개 게임 준비됨",
+    pagesSummaryOne: "페이지당 {pack}개, 인쇄 페이지 {count}장",
+    pagesSummaryOther: "페이지당 {pack}개, 인쇄 페이지 {count}장",
+    sheetTitle: "칸 길찾기",
+    solutions: "정답",
+    sheetKicker: "해밀턴 경로 퍼즐",
+    solutionSheets: "정답 페이지",
+    bundlePage: "번들 {bundle} / 페이지 {page}",
+    boardLabel: "보드: {width} × {height}.",
+    gameTitle: "문제 {game}",
+    howToSolve: "푸는 방법",
+    howToSolveBody: "선은 위, 아래, 왼쪽, 오른쪽으로만 그리세요.",
+    remember: "기억하세요",
+    rememberBody: "{cells}개의 모든 칸을 한 번씩만 지나가고 숫자를 순서대로 따라가세요.",
+    instructionsPath:
+      "모든 칸을 한 번씩만 지나는 한 줄 길을 그리세요. 1번부터 {checkpoints}번까지 숫자를 차례대로 지나갑니다. 1이 시작이고 {checkpoints}가 끝입니다.",
+    instructionsCircuit:
+      "모든 칸을 한 번씩만 지나는 한 바퀴 길을 그리세요. 1번부터 {checkpoints}번까지 숫자를 차례대로 지나갑니다. 1과 {checkpoints}는 길이 거기서 이어지므로 서로 이웃합니다.",
+    errorBundleDigits: "번들은 숫자만 포함해야 합니다.",
+    errorBundleRange: "번들은 10^12보다 작아야 합니다.",
+    errorBoardMin: "보드의 가로와 세로는 모두 최소 2여야 합니다.",
+    errorBoardArea: "보드 면적은 {limit}칸 이하여야 합니다.",
+    errorCircuitEven: "한 바퀴 길은 칸 수가 짝수여야 합니다.",
+    errorCheckpointsFit: "숫자 표시 수는 보드 안에 들어가야 합니다.",
+    errorGamesPackMin: "게임 수와 페이지당 수는 모두 최소 1이어야 합니다.",
+    errorWholeNumber: "{label} 값은 정수여야 합니다.",
+  },
+  fa: {
+    appTitle: "مسیر خانه‌ها",
+    appLead: "معماهای مسیر خانه‌ها را مستقیم در مرورگر بسازید و چاپ کنید.",
+    bundleSection: "بسته",
+    bundleId: "شناسهٔ بسته",
+    useCurrentTime: "استفاده از زمان فعلی",
+    boardSection: "صفحه",
+    square: "مربع",
+    rectangle: "مستطیل",
+    size: "اندازه",
+    width: "عرض",
+    height: "ارتفاع",
+    checkpoints: "عددها",
+    checkpointTerm: "عدد",
+    mode: "شکل راه",
+    path: "یک راه",
+    circuit: "یک دور",
+    sheetsSection: "برگه‌ها",
+    games: "بازی‌ها",
+    packPerPage: "در هر صفحه",
+    generateSheets: "ساخت برگه‌ها",
+    print: "چاپ",
+    currentSet: "خلاصهٔ چاپ",
+    language: "زبان",
+    livePreview: "پیش‌نمایش",
+    printablePages: "صفحه‌های قابل چاپ",
+    previewNote: "برای خروجی نهایی از پنجرهٔ چاپ مرورگر استفاده کنید.",
+    cannotGenerate: "نمی‌توان برگه‌ها را ساخت",
+    invalidSettings: "تنظیمات نامعتبر",
+    gamesReadyOne: "{count} بازی آماده است",
+    gamesReadyOther: "{count} بازی آماده است",
+    pagesSummaryOne: "{pack} در هر صفحه، {count} صفحهٔ چاپی",
+    pagesSummaryOther: "{pack} در هر صفحه، {count} صفحهٔ چاپی",
+    sheetTitle: "مسیر خانه‌ها",
+    solutions: "راه‌حل‌ها",
+    sheetKicker: "یک معمای مسیر همیلتونی",
+    solutionSheets: "صفحه‌های راه‌حل",
+    bundlePage: "بسته {bundle} / صفحه {page}",
+    boardLabel: "صفحه: {width} × {height}.",
+    gameTitle: "معما {game}",
+    howToSolve: "روش حل",
+    howToSolveBody: "خط‌ها را فقط به بالا، پایین، چپ یا راست بکشید.",
+    remember: "یادآوری",
+    rememberBody: "از همهٔ {cells} خانه فقط یک بار عبور کنید و عددها را به ترتیب دنبال کنید.",
+    instructionsPath:
+      "یک راه بکشید که از هر خانه فقط یک بار عبور کند. عددهای 1 تا {checkpoints} را به ترتیب دنبال کنید. عدد 1 شروع و عدد {checkpoints} پایان مسیر است.",
+    instructionsCircuit:
+      "یک دور بکشید که از هر خانه فقط یک بار عبور کند. عددهای 1 تا {checkpoints} را به ترتیب دنبال کنید. عدد 1 و عدد {checkpoints} کنار هم هستند چون دور در آنجا بسته می‌شود.",
+    errorBundleDigits: "بسته فقط باید شامل رقم باشد.",
+    errorBundleRange: "بسته باید کوچک‌تر از 10^12 باشد.",
+    errorBoardMin: "عرض و ارتفاع صفحه هر دو باید حداقل 2 باشند.",
+    errorBoardArea: "مساحت صفحه باید حداکثر {limit} خانه باشد.",
+    errorCircuitEven: "یک دور به تعداد زوج خانه نیاز دارد.",
+    errorCheckpointsFit: "تعداد عددها باید در صفحه جا شود.",
+    errorGamesPackMin: "تعداد بازی‌ها و تعداد در هر صفحه هر دو باید حداقل 1 باشند.",
+    errorWholeNumber: "{label} باید عدد صحیح باشد.",
+  },
+  sw: {
+    appTitle: "Njia ya Visanduku",
+    appLead: "Tengeneza mafumbo ya njia ya visanduku yanayoweza kuchapishwa moja kwa moja kwenye kivinjari.",
+    bundleSection: "Kifurushi",
+    bundleId: "Kitambulisho cha Kifurushi",
+    useCurrentTime: "Tumia Wakati wa Sasa",
+    boardSection: "Bodi",
+    square: "Mraba",
+    rectangle: "Mstatili",
+    size: "Ukubwa",
+    width: "Upana",
+    height: "Urefu",
+    checkpoints: "Namba",
+    checkpointTerm: "namba",
+    mode: "Aina ya njia",
+    path: "Njia wazi",
+    circuit: "Mzunguko mmoja",
+    sheetsSection: "Karatasi",
+    games: "Michezo",
+    packPerPage: "Kwa Kila Ukurasa",
+    generateSheets: "Tengeneza Karatasi",
+    print: "Chapisha",
+    currentSet: "Muhtasari wa Uchapishaji",
+    language: "Lugha",
+    livePreview: "Hakikisho",
+    printablePages: "Kurasa za Kuchapisha",
+    previewNote: "Tumia kidirisha cha print cha kivinjari kwa matokeo ya mwisho.",
+    cannotGenerate: "Haiwezi kutengeneza karatasi",
+    invalidSettings: "Mipangilio si sahihi",
+    gamesReadyOne: "Mchezo {count} uko tayari",
+    gamesReadyOther: "Michezo {count} iko tayari",
+    pagesSummaryOne: "{pack} kwa kila ukurasa, ukurasa {count} wa kuchapisha",
+    pagesSummaryOther: "{pack} kwa kila ukurasa, kurasa {count} za kuchapisha",
+    sheetTitle: "Njia ya Visanduku",
+    solutions: "Majibu",
+    sheetKicker: "Fumbo la njia ya Hamilton",
+    solutionSheets: "Kurasa za Majibu",
+    bundlePage: "kifurushi {bundle} / ukurasa {page}",
+    boardLabel: "Bodi: {width} × {height}.",
+    gameTitle: "Fumbo {game}",
+    howToSolve: "Jinsi ya kutatua",
+    howToSolveBody: "Chora mistari juu, chini, kushoto au kulia tu.",
+    remember: "Kumbuka",
+    rememberBody: "Tembelea visanduku vyote {cells} mara moja tu na fuata namba kwa mpangilio.",
+    instructionsPath:
+      "Chora njia wazi inayopita kwenye kila kisanduku mara moja tu. Fuata namba 1 hadi {checkpoints} kwa mpangilio. Namba 1 ndiyo mwanzo na namba {checkpoints} ndiyo mwisho.",
+    instructionsCircuit:
+      "Chora mzunguko mmoja unaopita kwenye kila kisanduku mara moja tu. Fuata namba 1 hadi {checkpoints} kwa mpangilio. Namba 1 na namba {checkpoints} ziko karibu kwa sababu mzunguko unafunga hapo.",
+    errorBundleDigits: "Kifurushi lazima kiwe na tarakimu tu.",
+    errorBundleRange: "Kifurushi lazima kiwe chini ya 10^12.",
+    errorBoardMin: "Upana na urefu wa bodi lazima viwe angalau 2.",
+    errorBoardArea: "Eneo la bodi lazima liwe seli {limit} au chini yake.",
+    errorCircuitEven: "Mzunguko mmoja unahitaji idadi ya seli ya jozi.",
+    errorCheckpointsFit: "Idadi ya namba lazima itoshe kwenye bodi.",
+    errorGamesPackMin: "Idadi ya michezo na idadi kwa kila ukurasa lazima iwe angalau 1.",
+    errorWholeNumber: "{label} lazima iwe nambari kamili.",
+  },
+};
+
+currentLocale = resolveLocale();
+init();
 
 function escapeHtml(value) {
   return String(value)
