@@ -1,7 +1,17 @@
 from pathlib import Path
 import tempfile
 
-from hampuz.generator import Point, build_puzzle, current_unix_millis, default_output_path, render_html
+from hampuz.generator import (
+    Point,
+    build_puzzle,
+    build_puzzle_pack,
+    current_unix_millis,
+    default_run_seed,
+    default_output_path,
+    derive_game_seed,
+    render_html,
+    render_pack_html,
+)
 
 
 def test_build_puzzle_has_full_path_and_requested_checkpoints() -> None:
@@ -48,9 +58,9 @@ def test_render_html_contains_teacher_solution_page() -> None:
     puzzle = build_puzzle(seed=11, width=5, height=6, checkpoint_count=8, mode="path")
     html = render_html(puzzle, include_solution=True)
 
-    assert "Teacher Copy" in html
     assert "Checkpoint Trail" in html
     assert "Board: 5 x 6." in html
+    assert "Solutions" in html
 
 
 def test_render_html_describes_circuit_mode() -> None:
@@ -74,6 +84,30 @@ def test_current_unix_millis_is_positive_int() -> None:
 
     assert isinstance(seed, int)
     assert seed > 0
+
+
+def test_default_run_seed_uses_12_digit_timestamp() -> None:
+    seed = default_run_seed()
+
+    assert isinstance(seed, int)
+    assert 0 <= seed < 10**12
+
+
+def test_derive_game_seed_uses_decimal_slotting() -> None:
+    assert derive_game_seed(123456789012, 0) == 123456789012
+    assert derive_game_seed(123456789012, 3) == 3123456789012
+
+
+def test_render_pack_html_groups_multiple_games() -> None:
+    puzzles = build_puzzle_pack(seed=555, games=3, width=6, height=6, checkpoint_count=10, mode="path")
+    html = render_pack_html(puzzles, include_solution=True, pack=2)
+
+    assert "Game 1" in html
+    assert "Game 2" in html
+    assert "Game 3" in html
+    assert html.count("<section class=\"page") == 4
+    assert "bundle 555" in html
+    assert "Path • seed" not in html
 
 
 def _is_hamiltonian_grid_walk(path: tuple[Point, ...]) -> bool:

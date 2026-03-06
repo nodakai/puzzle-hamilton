@@ -6,8 +6,9 @@
 
 - Builds square or rectangular Hamilton puzzles with ordered checkpoints
 - Supports non-closed path mode and closed circuit mode
+- Packs multiple games into each printed page
 - Renders a fixed-size printable HTML worksheet
-- Optionally includes a second page with the solution path for teachers
+- Optionally includes solution pages
 - Uses only the Python standard library at runtime
 
 ## Quick start
@@ -30,17 +31,19 @@ $(python -c 'import tempfile; print(tempfile.gettempdir())')/hampuz/
 ## Useful commands
 
 ```bash
-uv run hampuz --size 10 --seed 42
-uv run hampuz --width 8 --height 10 --checkpoints 12 --path --no-solution
-uv run hampuz --width 6 --height 6 --seed 42 --circuit --output ./output/puzzle.html
+uv run hampuz --size 10 --bundle 42 --pack 2
+uv run hampuz --width 8 --height 10 --checkpoints 12 --path --pack 4 --games 8 --no-solution
+uv run hampuz --width 6 --height 6 --bundle 42 --circuit --pack 2 --output ./output/puzzle.html
 uv run pytest
-uv run python -m hampuz.cli --seed 42
+uv run python -m hampuz.cli --bundle 42
 ```
 
 ## Notes
 
-- If `--seed` is omitted, the CLI uses the current Unix timestamp in milliseconds.
-- Python integers do not overflow at ordinary Unix millisecond values, so this seed format is safe here.
+- If `--bundle` is omitted, the CLI uses `int(yyMMddHHmmss)`.
+- `--pack 2` is the default and places two games on each page.
+- If `--games` is omitted, the CLI generates as many games as the pack size.
+- Each game is still derived deterministically from the bundle id and game index, but only the bundle id is shown in the output.
 - The HTML is intentionally not fluid; it targets predictable print output on A4 paper.
 - `--size 10` is shorthand for a `10 x 10` board.
 - In non-closed path mode, checkpoint `1` begins the path and the last checkpoint ends it.
